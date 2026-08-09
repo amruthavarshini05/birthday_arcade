@@ -1,0 +1,236 @@
+.cake-disaster {
+    min-height: 100vh;
+    padding: 30px;
+  }
+  
+  .cake-disaster-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .cake-disaster-header h1 {
+    margin: 0;
+  }
+  
+  .cake-disaster-header p {
+    margin: 5px 0 0;
+  }
+  
+  .cake-game {
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .cake-start,
+  .cake-board {
+    text-align: center;
+  }
+  
+  /* START SCREEN */
+  
+  .cake-preview {
+    font-size: 100px;
+    margin-bottom: 20px;
+  }
+  
+  .cake-start button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  /* TARGET CAKE */
+  
+  .target-cake {
+    position: relative;
+    width: 260px;
+    height: 110px;
+    margin: 10px auto 20px;
+    border: 2px dashed #5b3a42;
+    border-radius: 12px;
+    background: #fff8f4;
+  }
+  
+  .target-cake span {
+    position: absolute;
+    font-size: 24px;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* DECORATION TRAY */
+  
+  .decoration-tray {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .decoration-tray button {
+    width: 55px;
+    height: 55px;
+    border: 2px solid #5b3a42;
+    border-radius: 12px;
+    background: white;
+    font-size: 28px;
+    cursor: grab;
+    transition: transform 0.1s ease;
+  }
+  
+  .decoration-tray button:hover {
+    transform: translateY(-3px);
+  }
+  
+  .decoration-tray button:active {
+    cursor: grabbing;
+    transform: scale(0.95);
+  }
+  
+  /* CAKE */
+  
+  .cake {
+    position: relative;
+    width: 260px;
+    height: 190px;
+    margin: 30px auto;
+    touch-action: none;
+    user-select: none;
+  }
+  
+  /* TOP OF CAKE */
+  
+  .cake-top {
+    position: absolute;
+    top: 25px;
+    left: 20px;
+    width: 220px;
+    height: 55px;
+    border-radius: 50%;
+    background: #ffd6e7;
+    border: 4px solid #5b3a42;
+  }
+  
+  /* FROSTING */
+  
+  .frosting {
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 100%;
+    height: 25px;
+  }
+  
+  .frosting span {
+    position: absolute;
+    width: 35px;
+    height: 25px;
+    background: #ffd6e7;
+    border-radius: 0 0 50% 50%;
+  }
+  
+  .frosting span:nth-child(1) {
+    left: 45px;
+  }
+  
+  .frosting span:nth-child(2) {
+    left: 95px;
+  }
+  
+  .frosting span:nth-child(3) {
+    left: 145px;
+  }
+  
+  /* CAKE BODY */
+  
+  .cake-body {
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    width: 220px;
+    height: 100px;
+    background: #f3a6b8;
+    border: 4px solid #5b3a42;
+    border-top: none;
+    border-radius: 0 0 18px 18px;
+  }
+  
+  .cake-layer {
+    height: 45px;
+    border-bottom: 3px solid #d9829b;
+  }
+  
+  /* PLACED DECORATIONS */
+  
+  .placed-decoration {
+    position: absolute;
+    z-index: 5;
+    font-size: 24px;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  
+  /* DRAGGING DECORATION */
+  
+  .dragging-decoration {
+    position: absolute;
+    z-index: 20;
+    font-size: 28px;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0.8;
+  }
+  
+  /* CHECK CAKE */
+  
+  .check-cake-button {
+    padding: 12px 24px;
+    border: 2px solid #5b3a42;
+    border-radius: 10px;
+    background: #ffd6e7;
+    color: #5b3a42;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .check-cake-button:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* SCORE */
+  
+  .cake-score {
+    margin-top: 25px;
+  }
+  
+  .cake-score h2 {
+    margin-bottom: 5px;
+  }
+  
+  .cake-score p {
+    margin: 5px 0 15px;
+  }
+  
+  .cake-score button {
+    padding: 10px 20px;
+    border: 2px solid #5b3a42;
+    border-radius: 10px;
+    background: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .cake-score button:hover {
+    transform: translateY(-2px);
+  }

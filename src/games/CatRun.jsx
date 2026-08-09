@@ -1,7 +1,60 @@
 import { useEffect, useRef, useState } from 'react'
 import './CatRun.css'
 
+import catRun1 from '../assets/cat-run/cat_run_1.png'
+import catRun2 from '../assets/cat-run/cat_run_2.png'
+import catRun3 from '../assets/cat-run/cat_run_3.png'
+
+import cactusTall from '../assets/cat-run/cactus_tall.png'
+import cactusRound from '../assets/cat-run/cactus_round.png'
+import cactusSide from '../assets/cat-run/cactus_side.png'
+
+import backgroundScene from '../assets/cat-run/background_bottom.png'
+
+const CACTUS_IMAGES = [
+    new Image(),
+    new Image(),
+    new Image(),
+  ]
+
+CACTUS_IMAGES[0].src = cactusTall
+CACTUS_IMAGES[1].src = cactusRound
+CACTUS_IMAGES[2].src = cactusSide
+
+import birdFly1 from '../assets/cat-run/bird_fly_1.png'
+import birdFly2 from '../assets/cat-run/bird_fly_2.png'
+
+
+const CAT_RUN_FRAMES = [
+    catRun1,
+    catRun2,
+    catRun3,
+  ]
+
+const CACTUS_VARIANTS = [
+cactusTall,
+cactusRound,
+cactusSide,
+]
+
+const BIRD_FRAMES = [
+    birdFly1,
+    birdFly2,
+  ]
+
+  const BIRD_IMAGES = [
+    new Image(),
+    new Image(),
+  ]
+  
+  BIRD_IMAGES[0].src = birdFly1
+  BIRD_IMAGES[1].src = birdFly2
+
+const BACKGROUND_IMAGE = new Image()
+BACKGROUND_IMAGE.src = backgroundScene
+
 const GAME_WIDTH = 900
+const GAME_HEIGHT = 320
 const GROUND_Y = 260
 
 function CatRun({ onBack }) {
@@ -78,12 +131,16 @@ function CatRun({ onBack }) {
           return
         }
       
+        const cactusVariant =
+        Math.floor(Math.random() * CACTUS_VARIANTS.length)
+
         game.obstacles.push({
-          type: 'cactus',
-          x: GAME_WIDTH,
-          y: GROUND_Y - 45,
-          width: 30,
-          height: 45,
+        type: 'cactus',
+        x: GAME_WIDTH,
+        y: GROUND_Y - 60,
+        width: 45,
+        height: 60,
+        variant: cactusVariant,
         })
       }
 
@@ -105,26 +162,58 @@ function CatRun({ onBack }) {
         )
       }
 
-    function drawCat() {
-        ctx.save()
+      function drawCat() {
+        const frameIndex =
+          Math.floor(game.frame / 8) % CAT_RUN_FRAMES.length
       
-        ctx.translate(game.cat.x + game.cat.width, 0)
-        ctx.scale(-1, 1)
+        const catImage = new Image()
+        catImage.src = CAT_RUN_FRAMES[frameIndex]
       
-        ctx.font = '42px Arial'
-        ctx.fillText('🐈', 0, game.cat.y + 42)
-      
-        ctx.restore()
+        ctx.drawImage(
+          catImage,
+          game.cat.x - 8,
+          game.cat.y,
+          65,
+          50
+        )
       }
 
       function drawObstacle(obstacle) {
-        ctx.font = '42px Arial'
-      
         if (obstacle.type === 'bird') {
-          ctx.fillText('🐦', obstacle.x, obstacle.y + 35)
-        } else {
-          ctx.fillText('🌵', obstacle.x, obstacle.y + 42)
+  const birdFrame =
+    Math.floor(game.frame / 8) % BIRD_IMAGES.length
+
+  const birdImage = BIRD_IMAGES[birdFrame]
+
+  if (!birdImage.complete) {
+    return
+  }
+
+  ctx.drawImage(
+    birdImage,
+    obstacle.x - 8,
+    obstacle.y - 5,
+    58,
+    45
+  )
+
+  return
+}
+      
+        const cactusImage =
+          CACTUS_IMAGES[obstacle.variant ?? 0]
+      
+        if (!cactusImage.complete) {
+          return
         }
+      
+        ctx.drawImage(
+          cactusImage,
+          obstacle.x - 5,
+          obstacle.y,
+          55,
+          70
+        )
       }
 
     function drawGround() {
@@ -153,14 +242,39 @@ function CatRun({ onBack }) {
 
       // Create obstacles at random intervals
 if (game.frame >= game.nextObstacleFrame) {
-  const obstacleType = Math.random() < 0.25
-    ? 'bird'
-    : 'cactus'
+  const random = Math.random()
 
-  createObstacle(obstacleType)
+  // Most of the time: a normal cactus
+  if (random < 0.65) {
+    createObstacle('cactus')
+  }
 
-  const minimumGap = 70
-  const maximumGap = 200
+  // Sometimes: a bird
+  else if (random < 0.9) {
+    createObstacle('bird')
+  }
+
+  // Rarely: a double cactus
+  else {
+    createObstacle('cactus')
+
+    const secondCactusVariant =
+    Math.floor(Math.random() * CACTUS_VARIANTS.length)
+
+    game.obstacles.push({
+    type: 'cactus',
+    x: GAME_WIDTH + 42,
+    y: GROUND_Y - 60,
+    width: 45,
+    height: 60,
+    variant: secondCactusVariant,
+    })
+  }
+
+  // The faster the game gets, the more space we give
+  // the player between obstacle groups.
+  const minimumGap = Math.max(70, 100 - game.speed * 3)
+  const maximumGap = Math.max(150, 230 - game.speed * 4)
 
   const randomGap =
     Math.floor(
@@ -202,16 +316,32 @@ if (game.frame >= game.nextObstacleFrame) {
       setScore(Math.floor(game.score))
 
       // Gradually increase speed
-        game.speed = Math.min(
-        12,
-        6 + Math.floor(game.score / 100)
-        )
+      game.speed = Math.min(
+        14,
+        6 + game.score / 120
+      )
     }
+
+    function drawBackground() {
+        if (!BACKGROUND_IMAGE.complete) {
+          return
+        }
+      
+        ctx.imageSmoothingEnabled = false
+      
+        ctx.drawImage(
+          BACKGROUND_IMAGE,
+          0,
+          0,
+          GAME_WIDTH,
+          GAME_HEIGHT
+        )
+      }
 
     function draw() {
       ctx.clearRect(0, 0, GAME_WIDTH, 320)
 
-      drawGround()
+      drawBackground()
       drawCat()
 
       game.obstacles.forEach(drawObstacle)

@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import './App.css'
 import CatRun from './games/CatRun'
+import CakeDisaster from './games/CakeDisaster'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('arcade')
 
   if (currentPage === 'cat-run') {
     return <CatRun onBack={() => setCurrentPage('arcade')} />
+  }
+  if (currentPage === 'cake-disaster') {
+    return <CakeDisaster onBack={() => setCurrentPage('arcade')} />
   }
 
   return (
@@ -36,7 +40,7 @@ function App() {
           </button>
         </div>
 
-        <div className="game-card locked">
+        <div className="game-card">
           <div className="game-icon">🍰</div>
 
           <h2>Cake Disaster</h2>
@@ -45,12 +49,12 @@ function App() {
             Make a cake. Make questionable choices.
           </p>
 
-          <button disabled>
-            LOCKED 🔒
+          <button onClick={() => setCurrentPage('cake-disaster')}>
+            PLAY
           </button>
         </div>
 
-        <div className="game-card locked">
+          <div className="game-card locked">
           <div className="game-icon">🧠</div>
 
           <h2>Brain Cell</h2>
