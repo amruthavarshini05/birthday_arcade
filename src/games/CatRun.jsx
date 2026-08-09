@@ -26,6 +26,7 @@ function CatRun({ onBack }) {
     speed: 6,
     score: 0,
     frame: 0,
+    nextObstacleFrame: 100,
     gameOver: false,
   })
 
@@ -48,10 +49,11 @@ function CatRun({ onBack }) {
       }
 
       game.obstacles = []
-      game.speed = 6
-      game.score = 0
-      game.frame = 0
-      game.gameOver = false
+        game.speed = 6
+        game.score = 0
+        game.frame = 0
+        game.nextObstacleFrame = 100
+        game.gameOver = false
 
       setScore(0)
     }
@@ -63,14 +65,27 @@ function CatRun({ onBack }) {
       }
     }
 
-    function createObstacle() {
-      game.obstacles.push({
-        x: GAME_WIDTH,
-        y: GROUND_Y - 45,
-        width: 30,
-        height: 45,
-      })
-    }
+    function createObstacle(type = 'cactus') {
+        if (type === 'bird') {
+          game.obstacles.push({
+            type: 'bird',
+            x: GAME_WIDTH,
+            y: GROUND_Y - 105,
+            width: 45,
+            height: 35,
+          })
+      
+          return
+        }
+      
+        game.obstacles.push({
+          type: 'cactus',
+          x: GAME_WIDTH,
+          y: GROUND_Y - 45,
+          width: 30,
+          height: 45,
+        })
+      }
 
     function checkCollision(cat, obstacle) {
         const catPaddingX = 10
@@ -102,10 +117,15 @@ function CatRun({ onBack }) {
         ctx.restore()
       }
 
-    function drawObstacle(obstacle) {
-      ctx.font = '42px Arial'
-      ctx.fillText('🌵', obstacle.x, obstacle.y + 42)
-    }
+      function drawObstacle(obstacle) {
+        ctx.font = '42px Arial'
+      
+        if (obstacle.type === 'bird') {
+          ctx.fillText('🐦', obstacle.x, obstacle.y + 35)
+        } else {
+          ctx.fillText('🌵', obstacle.x, obstacle.y + 42)
+        }
+      }
 
     function drawGround() {
       ctx.beginPath()
@@ -131,10 +151,24 @@ function CatRun({ onBack }) {
         game.cat.jumping = false
       }
 
-      // Create obstacles
-      if (game.frame > 90 && game.frame % 110 === 0) {
-        createObstacle()
-      }
+      // Create obstacles at random intervals
+if (game.frame >= game.nextObstacleFrame) {
+  const obstacleType = Math.random() < 0.25
+    ? 'bird'
+    : 'cactus'
+
+  createObstacle(obstacleType)
+
+  const minimumGap = 70
+  const maximumGap = 200
+
+  const randomGap =
+    Math.floor(
+      Math.random() * (maximumGap - minimumGap + 1)
+    ) + minimumGap
+
+  game.nextObstacleFrame = game.frame + randomGap
+}
 
       // Move obstacles
       game.obstacles.forEach((obstacle) => {
@@ -168,9 +202,10 @@ function CatRun({ onBack }) {
       setScore(Math.floor(game.score))
 
       // Gradually increase speed
-      if (game.score > 0 && Math.floor(game.score) % 100 === 0) {
-        game.speed = Math.min(12, 6 + Math.floor(game.score / 100))
-      }
+        game.speed = Math.min(
+        12,
+        6 + Math.floor(game.score / 100)
+        )
     }
 
     function draw() {
