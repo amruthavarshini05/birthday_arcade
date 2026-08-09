@@ -1,0 +1,152 @@
+.cat-run {
+    min-height: 100vh;
+    padding: 30px;
+    background: #f7f3ea;
+    color: #252525;
+  }
+  
+  .cat-run-header {
+    max-width: 1000px;
+    margin: 0 auto 30px;
+  
+    display: flex;
+    align-items: center;
+    gap: 25px;
+  }
+  
+  .cat-run-header h1 {
+    margin: 0;
+    font-size: 3rem;
+  }
+  
+  .cat-run-header p {
+    margin: 5px 0 0;
+    color: #666;
+  }
+  
+  .back-button {
+    padding: 10px 16px;
+  
+    border: 2px solid #252525;
+    border-radius: 8px;
+  
+    background: white;
+    color: #252525;
+  
+    cursor: pointer;
+    font-weight: 700;
+  }
+  
+  .scoreboard {
+    max-width: 900px;
+    margin: 0 auto 15px;
+  
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+  }
+  
+  .scoreboard div {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+  
+  .scoreboard span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #777;
+  }
+  
+  .scoreboard strong {
+    font-size: 1.3rem;
+  }
+  
+  .game-container {
+    position: relative;
+  
+    width: min(900px, 100%);
+    margin: 0 auto;
+  
+    overflow: hidden;
+  
+    background: white;
+  
+    border: 3px solid #252525;
+    border-radius: 15px;
+  
+    box-shadow: 8px 8px 0 #252525;
+  }
+  
+  .game-container canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+  
+    cursor: pointer;
+  }
+  
+  .game-over {
+    position: absolute;
+  
+    top: 50%;
+    left: 50%;
+  
+    transform: translate(-50%, -50%);
+  
+    padding: 30px 40px;
+  
+    background: white;
+  
+    border: 3px solid #252525;
+    border-radius: 15px;
+  
+    text-align: center;
+  
+    box-shadow: 6px 6px 0 #252525;
+  }
+  
+  .game-over h2 {
+    margin: 0;
+    font-size: 2.5rem;
+  }
+  
+  .game-over p {
+    color: #666;
+  }
+  
+  .game-over button {
+    padding: 12px 24px;
+  
+    border: 3px solid #252525;
+    border-radius: 8px;
+  
+    background: #252525;
+    color: white;
+  
+    font-weight: 800;
+  
+    cursor: pointer;
+  }
+  
+  .game-over button:hover {
+    transform: translateY(-2px);
+  }
+  
+  @media (max-width: 600px) {
+    .cat-run {
+      padding: 20px;
+    }
+  
+    .cat-run-header {
+      align-items: flex-start;
+    }
+  
+    .cat-run-header h1 {
+      font-size: 2rem;
+    }
+  
+    .scoreboard {
+      justify-content: space-between;
+    }
+  }
