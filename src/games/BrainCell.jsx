@@ -12,13 +12,18 @@ const FALLING_OBJECTS = [
 const GAME_DURATION = 60
 
 function BrainCell({ onBack }) {
-  const [gameStarted, setGameStarted] = useState(false)
-  const [gameOver, setGameOver] = useState(false)
+  const [gameStarted, setGameStarted] =
+    useState(false)
 
-  const [playerX, setPlayerX] = useState(50)
-  const [fallingObjects, setFallingObjects] = useState([])
+  const [gameOver, setGameOver] =
+    useState(false)
 
-  const [score, setScore] = useState(0)
+  const [fallingObjects, setFallingObjects] =
+    useState([])
+
+  const [score, setScore] =
+    useState(0)
+
   const [timeLeft, setTimeLeft] =
     useState(GAME_DURATION)
 
@@ -33,8 +38,16 @@ function BrainCell({ onBack }) {
       : 0
   })
 
+  /* =====================================================
+     REFS
+     ===================================================== */
+
   const playerXRef = useRef(50)
+
+  const playerRef = useRef(null)
+
   const scoreRef = useRef(0)
+
   const highScoreRef =
     useRef(highScore)
 
@@ -55,21 +68,41 @@ function BrainCell({ onBack }) {
   const draggingRef =
     useRef(false)
 
-  /*
-   * KEEP REFS IN SYNC
-   */
 
-  useEffect(() => {
-    playerXRef.current = playerX
-  }, [playerX])
+  /* =====================================================
+     KEEP HIGH SCORE REF IN SYNC
+     ===================================================== */
 
   useEffect(() => {
     highScoreRef.current = highScore
   }, [highScore])
 
-  /*
-   * KEYBOARD CONTROLS
-   */
+
+  /* =====================================================
+     MOVE PLAYER
+     ===================================================== */
+
+  function movePlayer(amount) {
+    const next = Math.max(
+      7,
+      Math.min(
+        93,
+        playerXRef.current + amount
+      )
+    )
+
+    playerXRef.current = next
+
+    if (playerRef.current) {
+      playerRef.current.style.left =
+        `${next}%`
+    }
+  }
+
+
+  /* =====================================================
+     KEYBOARD CONTROLS
+     ===================================================== */
 
   useEffect(() => {
     if (!gameStarted) return
@@ -79,32 +112,14 @@ function BrainCell({ onBack }) {
         event.key === 'ArrowLeft' ||
         event.key.toLowerCase() === 'a'
       ) {
-        setPlayerX((current) => {
-          const next = Math.max(
-            7,
-            current - 4
-          )
-
-          playerXRef.current = next
-
-          return next
-        })
+        movePlayer(-4)
       }
 
       if (
         event.key === 'ArrowRight' ||
         event.key.toLowerCase() === 'd'
       ) {
-        setPlayerX((current) => {
-          const next = Math.min(
-            93,
-            current + 4
-          )
-
-          playerXRef.current = next
-
-          return next
-        })
+        movePlayer(4)
       }
     }
 
@@ -121,12 +136,10 @@ function BrainCell({ onBack }) {
     }
   }, [gameStarted])
 
-  /*
-   * TOUCH / MOUSE DRAGGING
-   *
-   * Drag anywhere inside the play area
-   * to move the character horizontally.
-   */
+
+  /* =====================================================
+     TOUCH / MOUSE DRAGGING
+     ===================================================== */
 
   function updatePlayerFromPointer(
     clientX
@@ -147,26 +160,42 @@ function BrainCell({ onBack }) {
 
     const next = Math.max(
       7,
-      Math.min(93, percentage)
+      Math.min(
+        93,
+        percentage
+      )
     )
 
     playerXRef.current = next
-    setPlayerX(next)
+
+    /*
+      Move the player directly.
+      This avoids a React render
+      on every finger movement.
+    */
+
+    if (playerRef.current) {
+      playerRef.current.style.left =
+        `${next}%`
+    }
   }
+
 
   function handlePointerDown(event) {
     if (!gameStarted) return
 
     draggingRef.current = true
 
-    event.currentTarget.setPointerCapture?.(
-      event.pointerId
-    )
+    event.currentTarget
+      .setPointerCapture?.(
+        event.pointerId
+      )
 
     updatePlayerFromPointer(
       event.clientX
     )
   }
+
 
   function handlePointerMove(event) {
     if (
@@ -181,21 +210,24 @@ function BrainCell({ onBack }) {
     )
   }
 
+
   function handlePointerUp(event) {
     draggingRef.current = false
 
     try {
-      event.currentTarget.releasePointerCapture?.(
-        event.pointerId
-      )
+      event.currentTarget
+        .releasePointerCapture?.(
+          event.pointerId
+        )
     } catch {
       // Nothing to do.
     }
   }
 
-  /*
-   * MAIN GAME LOOP
-   */
+
+  /* =====================================================
+     MAIN GAME LOOP
+     ===================================================== */
 
   useEffect(() => {
     if (!gameStarted) return
@@ -204,9 +236,11 @@ function BrainCell({ onBack }) {
       performance.now()
 
     elapsedRef.current = 0
+
     spawnAccumulatorRef.current = 0
 
     let animationFrame
+
 
     const gameLoop = (
       currentTime
@@ -228,16 +262,17 @@ function BrainCell({ onBack }) {
       const elapsedSeconds =
         elapsedRef.current / 1000
 
-      /*
-       * TIMER
-       */
+
+      /* ================================================
+         TIMER
+         ================================================ */
 
       const remainingTime =
         Math.max(
           0,
           Math.ceil(
             GAME_DURATION -
-              elapsedSeconds
+            elapsedSeconds
           )
         )
 
@@ -245,15 +280,17 @@ function BrainCell({ onBack }) {
         remainingTime
       )
 
-      /*
-       * END GAME
-       */
+
+      /* ================================================
+         END GAME
+         ================================================ */
 
       if (
         elapsedSeconds >=
         GAME_DURATION
       ) {
         setGameStarted(false)
+
         setGameOver(true)
 
         setFallingObjects([])
@@ -263,31 +300,37 @@ function BrainCell({ onBack }) {
         return
       }
 
-      /*
-       * DIFFICULTY
-       */
+
+      /* ================================================
+         DIFFICULTY
+         ================================================ */
 
       let spawnRate = 1000
+
       let fallSpeed = 1.8
+
 
       if (elapsedSeconds >= 15) {
         spawnRate = 850
         fallSpeed = 2.1
       }
 
+
       if (elapsedSeconds >= 30) {
         spawnRate = 700
         fallSpeed = 2.5
       }
+
 
       if (elapsedSeconds >= 45) {
         spawnRate = 550
         fallSpeed = 3
       }
 
-      /*
-       * SPAWN
-       */
+
+      /* ================================================
+         SPAWN
+         ================================================ */
 
       spawnAccumulatorRef.current +=
         delta
@@ -302,7 +345,7 @@ function BrainCell({ onBack }) {
           FALLING_OBJECTS[
             Math.floor(
               Math.random() *
-                FALLING_OBJECTS.length
+              FALLING_OBJECTS.length
             )
           ]
 
@@ -311,9 +354,11 @@ function BrainCell({ onBack }) {
             Date.now() +
             Math.random(),
 
-          type: object.type,
+          type:
+            object.type,
 
-          points: object.points,
+          points:
+            object.points,
 
           x:
             Math.random() * 84 + 8,
@@ -322,9 +367,10 @@ function BrainCell({ onBack }) {
         })
       }
 
-      /*
-       * MOVE + CATCH
-       */
+
+      /* ================================================
+         MOVE + CATCH
+         ================================================ */
 
       const nextObjects = []
 
@@ -333,11 +379,12 @@ function BrainCell({ onBack }) {
           const nextY =
             object.y +
             fallSpeed *
-              (delta / 50)
+            (delta / 50)
 
-          /*
-           * CATCH ZONE
-           */
+
+          /* ============================================
+             CATCH ZONE
+             ============================================ */
 
           if (
             nextY >= 86 &&
@@ -346,7 +393,7 @@ function BrainCell({ onBack }) {
             const horizontalDistance =
               Math.abs(
                 object.x -
-                  playerXRef.current
+                playerXRef.current
               )
 
             if (
@@ -359,9 +406,10 @@ function BrainCell({ onBack }) {
                 scoreRef.current
               )
 
-              /*
-               * HIGH SCORE
-               */
+
+              /* ========================================
+                 HIGH SCORE
+                 ======================================== */
 
               if (
                 scoreRef.current >
@@ -384,9 +432,10 @@ function BrainCell({ onBack }) {
             }
           }
 
-          /*
-           * KEEP OBJECT
-           */
+
+          /* ============================================
+             KEEP OBJECT
+             ============================================ */
 
           if (nextY < 106) {
             nextObjects.push({
@@ -397,6 +446,7 @@ function BrainCell({ onBack }) {
         }
       )
 
+
       objectsRef.current =
         nextObjects
 
@@ -404,16 +454,19 @@ function BrainCell({ onBack }) {
         [...nextObjects]
       )
 
+
       animationFrame =
         requestAnimationFrame(
           gameLoop
         )
     }
 
+
     animationFrame =
       requestAnimationFrame(
         gameLoop
       )
+
 
     return () => {
       cancelAnimationFrame(
@@ -422,14 +475,18 @@ function BrainCell({ onBack }) {
     }
   }, [gameStarted])
 
-  /*
-   * START GAME
-   */
+
+  /* =====================================================
+     START / RESTART GAME
+     ===================================================== */
 
   function startGame() {
     playerXRef.current = 50
 
-    setPlayerX(50)
+    if (playerRef.current) {
+      playerRef.current.style.left =
+        '50%'
+    }
 
     scoreRef.current = 0
 
@@ -455,6 +512,11 @@ function BrainCell({ onBack }) {
 
     setGameStarted(true)
   }
+
+
+  /* =====================================================
+     RENDER
+     ===================================================== */
 
   return (
     <main className="brain-cell">
@@ -485,13 +547,16 @@ function BrainCell({ onBack }) {
           ← Arcade
         </button>
 
+
         <div className="brain-title">
 
           <span className="brain-title-icon">
             🧠
           </span>
 
+
           <div>
+
             <p className="brain-eyebrow">
               COGNITIVE DEPARTMENT
             </p>
@@ -503,6 +568,7 @@ function BrainCell({ onBack }) {
             <p>
               Catch what little remains.
             </p>
+
           </div>
 
         </div>
@@ -510,7 +576,9 @@ function BrainCell({ onBack }) {
       </header>
 
 
-      {/* START SCREEN */}
+      {/* =================================================
+          START SCREEN
+          ================================================= */}
 
       {!gameStarted &&
       !gameOver ? (
@@ -533,13 +601,16 @@ function BrainCell({ onBack }) {
 
           </div>
 
+
           <p className="brain-section-label">
             COGNITIVE EMERGENCY
           </p>
 
+
           <h2>
             Protect the brain cell!
           </h2>
+
 
           <p className="brain-start-copy">
             Catch the good stuff.
@@ -553,6 +624,7 @@ function BrainCell({ onBack }) {
           <div className="brain-points">
 
             <div className="brain-points-header">
+
               <span>
                 WHAT TO CATCH
               </span>
@@ -560,9 +632,12 @@ function BrainCell({ onBack }) {
               <strong>
                 POINTS
               </strong>
+
             </div>
 
+
             <div className="brain-point-row positive">
+
               <span>
                 🧠 Brain
               </span>
@@ -570,9 +645,12 @@ function BrainCell({ onBack }) {
               <strong>
                 +10
               </strong>
+
             </div>
 
+
             <div className="brain-point-row positive">
+
               <span>
                 ☕ Coffee
               </span>
@@ -580,9 +658,12 @@ function BrainCell({ onBack }) {
               <strong>
                 +15
               </strong>
+
             </div>
 
+
             <div className="brain-point-row negative">
+
               <span>
                 📱 Phone
               </span>
@@ -590,9 +671,12 @@ function BrainCell({ onBack }) {
               <strong>
                 -5
               </strong>
+
             </div>
 
+
             <div className="brain-point-row negative">
+
               <span>
                 🧟‍♀️ Dead Brain Cell
               </span>
@@ -600,9 +684,12 @@ function BrainCell({ onBack }) {
               <strong>
                 -10
               </strong>
+
             </div>
 
+
             <div className="brain-point-row negative">
+
               <span>
                 📖 Book
               </span>
@@ -610,10 +697,13 @@ function BrainCell({ onBack }) {
               <strong>
                 -15
               </strong>
+
             </div>
 
           </div>
 
+
+          {/* HOW TO PLAY */}
 
           <div className="brain-how-to-play">
 
@@ -626,6 +716,7 @@ function BrainCell({ onBack }) {
               <b> ← → </b>
               or
               <b> A / D</b>
+
               <br />
 
               📱 Phone: drag the
@@ -646,9 +737,12 @@ function BrainCell({ onBack }) {
 
         </section>
 
+
       ) : gameOver ? (
 
-        /* GAME OVER */
+        /* =================================================
+           GAME OVER
+           ================================================= */
 
         <section className="brain-game-over">
 
@@ -656,13 +750,16 @@ function BrainCell({ onBack }) {
             🧠💀
           </div>
 
+
           <p className="brain-section-label">
             SYSTEM FAILURE
           </p>
 
+
           <h2>
             BRAIN CELL DEPLETED!
           </h2>
+
 
           <p className="game-over-copy">
             Time's up.
@@ -703,9 +800,11 @@ function BrainCell({ onBack }) {
 
           {score >= highScore &&
           score > 0 && (
+
             <h3 className="new-high-score">
               🎉 NEW HIGH SCORE! 🎉
             </h3>
+
           )}
 
 
@@ -719,9 +818,12 @@ function BrainCell({ onBack }) {
 
         </section>
 
+
       ) : (
 
-        /* GAME */
+        /* =================================================
+           GAME
+           ================================================= */
 
         <section className="brain-game">
 
@@ -797,7 +899,6 @@ function BrainCell({ onBack }) {
             onPointerCancel={
               handlePointerUp
             }
-
           >
 
             <div className="brain-play-label">
@@ -809,8 +910,10 @@ function BrainCell({ onBack }) {
 
             {fallingObjects.map(
               (object) => (
+
                 <span
                   key={object.id}
+
                   className={`falling-object ${
                     object.points > 0
                       ? 'good-object'
@@ -818,12 +921,16 @@ function BrainCell({ onBack }) {
                   }`}
 
                   style={{
-                    left: `${object.x}%`,
-                    top: `${object.y}%`,
+                    left:
+                      `${object.x}%`,
+
+                    top:
+                      `${object.y}%`,
                   }}
                 >
                   {object.type}
                 </span>
+
               )
             )}
 
@@ -831,10 +938,11 @@ function BrainCell({ onBack }) {
             {/* PLAYER */}
 
             <div
+              ref={playerRef}
               className="brain-player"
 
               style={{
-                left: `${playerX}%`,
+                left: '50%',
               }}
             >
               👧
@@ -843,7 +951,9 @@ function BrainCell({ onBack }) {
 
             {/* CATCH LINE */}
 
-            <div className="brain-catch-line" />
+            <div
+              className="brain-catch-line"
+            />
 
           </div>
 

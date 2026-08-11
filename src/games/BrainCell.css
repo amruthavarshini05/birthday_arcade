@@ -1,5 +1,6 @@
 /* =========================================================
    BRAIN CELL
+   DARK ARCADE / NEON EDITION
    ========================================================= */
 
 .brain-cell {
@@ -16,23 +17,18 @@
 
   background:
     radial-gradient(
-      circle at 10% 15%,
-      rgba(205, 225, 255, 0.8),
-      transparent 26%
+      circle at 50% -10%,
+      rgba(104, 72, 180, 0.22),
+      transparent 35%
     ),
     radial-gradient(
-      circle at 90% 20%,
-      rgba(232, 213, 255, 0.75),
-      transparent 25%
-    ),
-    radial-gradient(
-      circle at 50% 100%,
-      rgba(255, 221, 233, 0.6),
+      circle at 10% 70%,
+      rgba(50, 120, 180, 0.12),
       transparent 30%
     ),
-    #f8f5ff;
+    #050505;
 
-  color: #252525;
+  color: #f5f5f5;
 }
 
 
@@ -49,7 +45,14 @@
 
   user-select: none;
 
-  opacity: 0.35;
+  opacity: 0.18;
+
+  filter:
+    grayscale(0.2)
+    drop-shadow(
+      0 0 10px
+      rgba(150, 120, 255, 0.25)
+    );
 }
 
 .brain-bg-orb-one {
@@ -84,6 +87,7 @@
 
 .brain-cell-header {
   position: relative;
+
   z-index: 2;
 
   max-width: 1050px;
@@ -92,6 +96,7 @@
     0 auto 35px;
 
   display: flex;
+
   align-items: center;
 
   gap: 20px;
@@ -110,6 +115,7 @@
   height: 64px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -117,14 +123,17 @@
 
   font-size: 38px;
 
-  background: #ded3ff;
+  background: #17121f;
 
-  border: 3px solid #252525;
+  border:
+    2px solid #8f6cff;
 
   border-radius: 18px;
 
   box-shadow:
-    5px 5px 0 #252525;
+    0 0 18px
+    rgba(143, 108, 255, 0.35),
+    5px 5px 0 #000;
 
   transform:
     rotate(3deg);
@@ -140,7 +149,7 @@
 
   letter-spacing: 0.18em;
 
-  color: #7660a8;
+  color: #a88cff;
 }
 
 .brain-cell-header h1 {
@@ -156,13 +165,15 @@
   line-height: 0.95;
 
   letter-spacing: -0.05em;
+
+  color: #ffffff;
 }
 
 .brain-cell-header p:not(.brain-eyebrow) {
   margin:
     7px 0 0;
 
-  color: #777;
+  color: #858585;
 
   font-size: 0.95rem;
 }
@@ -178,13 +189,13 @@
     16px;
 
   border:
-    2px solid #252525;
+    2px solid #292929;
 
   border-radius: 10px;
 
-  background: white;
+  background: #111111;
 
-  color: #252525;
+  color: #f5f5f5;
 
   cursor: pointer;
 
@@ -192,9 +203,13 @@
 
   white-space: nowrap;
 
+  box-shadow:
+    3px 3px 0 #000;
+
   transition:
     transform 0.15s ease,
-    box-shadow 0.15s ease;
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .back-button:hover {
@@ -204,15 +219,18 @@
       -2px
     );
 
+  border-color: #8f6cff;
+
   box-shadow:
-    3px 3px 0 #252525;
+    5px 5px 0 #000;
 }
 
 .back-button:active {
   transform:
     translate(0, 0);
 
-  box-shadow: none;
+  box-shadow:
+    2px 2px 0 #000;
 }
 
 
@@ -222,6 +240,7 @@
 
 .brain-start {
   position: relative;
+
   z-index: 1;
 
   max-width: 620px;
@@ -235,15 +254,22 @@
 
   text-align: center;
 
-  background: white;
+  background:
+    linear-gradient(
+      145deg,
+      #111111,
+      #090909
+    );
 
   border:
-    3px solid #252525;
+    2px solid #292929;
 
   border-radius: 24px;
 
   box-shadow:
-    8px 8px 0 #252525;
+    8px 8px 0 #000,
+    0 0 35px
+    rgba(117, 82, 205, 0.1);
 }
 
 
@@ -261,6 +287,7 @@
     0 auto 5px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 }
@@ -272,15 +299,8 @@
 
   filter:
     drop-shadow(
-      5px
-      6px
-      0
-      rgba(
-        37,
-        37,
-        37,
-        0.15
-      )
+      0 0 12px
+      rgba(170, 130, 255, 0.35)
     );
 
   animation:
@@ -313,7 +333,7 @@
 
   font-size: 28px;
 
-  color: #8d72d0;
+  color: #a88cff;
 
   animation:
     brain-star
@@ -386,7 +406,7 @@
 
   letter-spacing: 0.18em;
 
-  color: #7660a8;
+  color: #a88cff;
 }
 
 .brain-start h2 {
@@ -395,13 +415,15 @@
   font-size: 2.25rem;
 
   letter-spacing: -0.05em;
+
+  color: #ffffff;
 }
 
 .brain-start-copy {
   margin:
     14px auto 22px;
 
-  color: #666;
+  color: #999;
 
   line-height: 1.55;
 }
@@ -418,11 +440,11 @@
   overflow: hidden;
 
   border:
-    2px solid #252525;
+    2px solid #292929;
 
   border-radius: 13px;
 
-  background: #faf8ff;
+  background: #0d0d0d;
 }
 
 .brain-points-header {
@@ -435,10 +457,10 @@
   align-items: center;
   justify-content: space-between;
 
-  background: #ded3ff;
+  background: #17121f;
 
   border-bottom:
-    2px solid #252525;
+    2px solid #292929;
 }
 
 .brain-points-header span,
@@ -448,6 +470,8 @@
   font-weight: 900;
 
   letter-spacing: 0.12em;
+
+  color: #bcaaff;
 }
 
 .brain-point-row {
@@ -461,7 +485,7 @@
   justify-content: space-between;
 
   border-bottom:
-    1px solid #e2deea;
+    1px solid #242424;
 }
 
 .brain-point-row:last-child {
@@ -472,6 +496,8 @@
   font-size: 0.8rem;
 
   font-weight: 700;
+
+  color: #ddd;
 }
 
 .brain-point-row strong {
@@ -479,11 +505,11 @@
 }
 
 .brain-point-row.positive strong {
-  color: #38865a;
+  color: #76e0a2;
 }
 
 .brain-point-row.negative strong {
-  color: #c65b68;
+  color: #ff7183;
 }
 
 
@@ -507,10 +533,10 @@
 
   text-align: left;
 
-  background: #f4f0ff;
+  background: #0d0d0d;
 
   border:
-    2px dashed #a594ce;
+    2px dashed #5d4a85;
 
   border-radius: 11px;
 }
@@ -524,18 +550,18 @@
 
   font-size: 0.7rem;
 
-  color: #666;
+  color: #999;
 
   line-height: 1.5;
 }
 
 .brain-how-to-play b {
-  color: #252525;
+  color: #ffffff;
 }
 
 
 /* =========================================================
-   START BUTTON
+   START / RESTART BUTTON
    ========================================================= */
 
 .brain-start-button,
@@ -552,13 +578,13 @@
   gap: 8px;
 
   border:
-    3px solid #252525;
+    2px solid #8f6cff;
 
   border-radius: 11px;
 
-  background: #252525;
+  background: #17121f;
 
-  color: white;
+  color: #ffffff;
 
   font-size: 0.85rem;
 
@@ -567,11 +593,14 @@
   cursor: pointer;
 
   box-shadow:
-    5px 5px 0 #b8a2ed;
+    5px 5px 0 #000,
+    0 0 15px
+    rgba(143, 108, 255, 0.2);
 
   transition:
     transform 0.15s ease,
-    box-shadow 0.15s ease;
+    box-shadow 0.15s ease,
+    background 0.15s ease;
 }
 
 .brain-start-button:hover,
@@ -582,8 +611,12 @@
       -2px
     );
 
+  background: #211a2e;
+
   box-shadow:
-    7px 7px 0 #b8a2ed;
+    7px 7px 0 #000,
+    0 0 22px
+    rgba(143, 108, 255, 0.3);
 }
 
 .brain-start-button:active,
@@ -595,7 +628,7 @@
     );
 
   box-shadow:
-    2px 2px 0 #b8a2ed;
+    2px 2px 0 #000;
 }
 
 
@@ -605,6 +638,7 @@
 
 .brain-game {
   position: relative;
+
   z-index: 1;
 
   width: min(
@@ -642,15 +676,15 @@
   align-items: center;
   justify-content: space-between;
 
-  background: white;
+  background: #0d0d0d;
 
   border:
-    2px solid #252525;
+    2px solid #292929;
 
   border-radius: 10px;
 
   box-shadow:
-    3px 3px 0 #252525;
+    3px 3px 0 #000;
 }
 
 .brain-stat span {
@@ -665,16 +699,24 @@
 
 .brain-stat strong {
   font-size: 1rem;
+
+  color: #ffffff;
 }
 
 .brain-stat.timer-danger {
-  background: #ffe0e5;
+  background: #210e13;
+
+  border-color: #ff526b;
 
   animation:
     brain-timer-pulse
     0.8s
     ease-in-out
     infinite;
+
+  box-shadow:
+    0 0 15px
+    rgba(255, 82, 107, 0.2);
 }
 
 @keyframes brain-timer-pulse {
@@ -716,29 +758,26 @@
 
   background:
     radial-gradient(
-      circle at 20% 20%,
-      rgba(
-        255,
-        255,
-        255,
-        0.9
-      ),
-      transparent 25%
+      circle at 50% 40%,
+      rgba(74, 53, 120, 0.16),
+      transparent 45%
     ),
     linear-gradient(
       180deg,
-      #eee8ff 0%,
-      #e9f3ff 55%,
-      #fff2f5 100%
+      #090909 0%,
+      #050505 100%
     );
 
   border:
-    3px solid #252525;
+    2px solid #292929;
 
   border-radius: 18px;
 
   box-shadow:
-    7px 7px 0 #252525;
+    0 0 0 1px #000,
+    0 0 30px
+    rgba(113, 76, 210, 0.12),
+    7px 7px 0 #000;
 }
 
 .brain-play-area:active {
@@ -762,22 +801,12 @@
   background:
     radial-gradient(
       circle at 10% 80%,
-      rgba(
-        255,
-        255,
-        255,
-        0.7
-      ),
+      rgba(100, 70, 180, 0.08),
       transparent 18%
     ),
     radial-gradient(
       circle at 90% 60%,
-      rgba(
-        255,
-        255,
-        255,
-        0.65
-      ),
+      rgba(50, 120, 180, 0.07),
       transparent 18%
     );
 }
@@ -800,9 +829,9 @@
   border:
     1px solid
     rgba(
-      37,
-      37,
-      37,
+      143,
+      108,
+      255,
       0.25
     );
 
@@ -810,10 +839,10 @@
 
   background:
     rgba(
-      255,
-      255,
-      255,
-      0.55
+      15,
+      15,
+      15,
+      0.75
     );
 
   color: #777;
@@ -846,9 +875,10 @@
   height: 42px;
 
   transform:
-    translate(
+    translate3d(
       -50%,
-      -50%
+      -50%,
+      0
     );
 
   font-size: 28px;
@@ -857,21 +887,34 @@
 
   pointer-events: none;
 
+  will-change:
+    top,
+    transform;
+
   filter:
     drop-shadow(
-      2px
-      3px
-      2px
+      0 0 6px
       rgba(
-        0,
-        0,
-        0,
-        0.15
+        255,
+        255,
+        255,
+        0.18
       )
     );
 }
 
 .good-object {
+  filter:
+    drop-shadow(
+      0 0 8px
+      rgba(
+        120,
+        255,
+        180,
+        0.35
+      )
+    );
+
   animation:
     good-fall
     0.35s
@@ -879,6 +922,17 @@
 }
 
 .bad-object {
+  filter:
+    drop-shadow(
+      0 0 8px
+      rgba(
+        255,
+        90,
+        110,
+        0.3
+      )
+    );
+
   animation:
     bad-fall
     0.35s
@@ -888,18 +942,20 @@
 @keyframes good-fall {
   from {
     transform:
-      translate(
+      translate3d(
         -50%,
-        -50%
+        -50%,
+        0
       )
       scale(0.7);
   }
 
   to {
     transform:
-      translate(
+      translate3d(
         -50%,
-        -50%
+        -50%,
+        0
       )
       scale(1);
   }
@@ -908,9 +964,10 @@
 @keyframes bad-fall {
   from {
     transform:
-      translate(
+      translate3d(
         -50%,
-        -50%
+        -50%,
+        0
       )
       rotate(-10deg)
       scale(0.7);
@@ -918,9 +975,10 @@
 
   to {
     transform:
-      translate(
+      translate3d(
         -50%,
-        -50%
+        -50%,
+        0
       )
       rotate(0)
       scale(1);
@@ -943,11 +1001,22 @@
   height: 58px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
+  /*
+     IMPORTANT:
+     No left transition here.
+     The player should follow the finger immediately.
+  */
+
   transform:
-    translateX(-50%);
+    translate3d(
+      -50%,
+      0,
+      0
+    );
 
   font-size: 42px;
 
@@ -955,21 +1024,22 @@
 
   pointer-events: none;
 
+  will-change:
+    left,
+    transform;
+
   filter:
     drop-shadow(
       3px
       4px
       0
       rgba(
-        37,
-        37,
-        37,
-        0.2
+        0,
+        0,
+        0,
+        0.45
       )
     );
-
-  transition:
-    left 0.035s linear;
 }
 
 
@@ -990,10 +1060,10 @@
   border-top:
     2px dashed
     rgba(
-      118,
-      96,
-      168,
-      0.35
+      143,
+      108,
+      255,
+      0.25
     );
 
   pointer-events: none;
@@ -1029,6 +1099,7 @@
 
 .brain-game-over {
   position: relative;
+
   z-index: 1;
 
   max-width: 600px;
@@ -1042,15 +1113,22 @@
 
   text-align: center;
 
-  background: white;
+  background:
+    linear-gradient(
+      145deg,
+      #111111,
+      #090909
+    );
 
   border:
-    3px solid #252525;
+    2px solid #292929;
 
   border-radius: 24px;
 
   box-shadow:
-    8px 8px 0 #252525;
+    8px 8px 0 #000,
+    0 0 35px
+    rgba(117, 82, 205, 0.1);
 }
 
 .game-over-icon {
@@ -1089,6 +1167,8 @@
     );
 
   letter-spacing: -0.05em;
+
+  color: #ffffff;
 }
 
 .game-over-copy {
@@ -1120,10 +1200,10 @@
   padding:
     15px;
 
-  background: #f4f0ff;
+  background: #0d0d0d;
 
   border:
-    2px solid #252525;
+    2px solid #292929;
 
   border-radius: 11px;
 }
@@ -1144,14 +1224,29 @@
 
 .final-stat strong {
   font-size: 1.5rem;
+
+  color: #ffffff;
 }
 
 .final-stat.main-stat {
-  background: #ded3ff;
+  background: #17121f;
+
+  border-color: #8f6cff;
+
+  box-shadow:
+    0 0 15px
+    rgba(
+      143,
+      108,
+      255,
+      0.12
+    );
 }
 
 .final-stat.main-stat strong {
   font-size: 2.5rem;
+
+  color: #c5b4ff;
 }
 
 
@@ -1165,7 +1260,7 @@
 
   font-size: 1rem;
 
-  color: #7660a8;
+  color: #a88cff;
 
   animation:
     high-score-pop
@@ -1197,11 +1292,18 @@
 @media (max-width: 700px) {
 
   .brain-cell {
+    min-height: 100vh;
+
     padding:
-      18px
-      12px
-      35px;
+      25px
+      15px
+      40px;
+
+    overflow-x: hidden;
   }
+
+
+  /* HEADER */
 
   .brain-cell-header {
     gap: 10px;
@@ -1222,7 +1324,7 @@
     border-width: 2px;
 
     box-shadow:
-      3px 3px 0 #252525;
+      3px 3px 0 #000;
   }
 
   .brain-eyebrow {
@@ -1260,7 +1362,7 @@
     border-radius: 18px;
 
     box-shadow:
-      5px 5px 0 #252525;
+      5px 5px 0 #000;
   }
 
   .brain-start-art {
@@ -1339,7 +1441,7 @@
     gap: 2px;
 
     box-shadow:
-      2px 2px 0 #252525;
+      2px 2px 0 #000;
   }
 
   .brain-stat span {
@@ -1360,7 +1462,7 @@
     border-radius: 14px;
 
     box-shadow:
-      4px 4px 0 #252525;
+      4px 4px 0 #000;
   }
 
   .brain-play-label {
@@ -1400,7 +1502,7 @@
     border-radius: 18px;
 
     box-shadow:
-      5px 5px 0 #252525;
+      5px 5px 0 #000;
   }
 
   .game-over-icon {
@@ -1436,7 +1538,6 @@
   .final-stat.main-stat strong {
     font-size: 2rem;
   }
-
 }
 
 
@@ -1468,5 +1569,4 @@
   .brain-player {
     font-size: 34px;
   }
-
 }
