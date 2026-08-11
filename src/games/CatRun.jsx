@@ -124,6 +124,7 @@ function CatRun({ onBack }) {
     nextObstacleFrame: 100,
 
     gameOver: false,
+    lastDisplayedScore: 0,
   })
 
 
@@ -614,15 +615,17 @@ function CatRun({ onBack }) {
 
       /* SCORE */
 
-      game.score +=
-        0.1
+      game.score += 0.1
 
+const displayScore =
+  Math.floor(game.score)
 
-      setScore(
-        Math.floor(
-          game.score
-        )
-      )
+if (displayScore !== game.lastDisplayedScore) {
+  game.lastDisplayedScore =
+    displayScore
+
+  setScore(displayScore)
+}
 
 
       /* SPEED */
