@@ -501,53 +501,150 @@
     min-height: 100vh;
   }
 }
-
 /* =========================
    LANDSCAPE PHONE
 ========================= */
 
 @media (max-width: 900px) and (orientation: landscape) {
   .cat-run {
-    padding: 12px 18px 20px;
+    padding: 10px 18px 15px;
   }
 
   .cat-run-header {
-    margin-bottom: 10px;
+    margin-bottom: 7px;
   }
 
   .cat-title-icon {
-    width: 44px;
-    height: 44px;
-    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
   }
 
   .cat-run-header h1 {
-    font-size: 1.7rem;
+    font-size: 1.5rem;
   }
 
   .cat-run-header p:not(.eyebrow) {
-    font-size: 0.72rem;
-    margin-top: 3px;
+    font-size: 0.68rem;
+    margin-top: 2px;
   }
 
   .game-info {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    gap: 6px;
   }
 
   .info-card {
-    min-height: 44px;
-    padding: 5px 10px;
+    min-height: 38px;
+    padding: 4px 9px;
+  }
+
+  .info-card span {
+    font-size: 0.55rem;
+  }
+
+  .info-card strong {
+    font-size: 0.9rem;
+  }
+
+  .controls-card strong {
+    font-size: 0.7rem;
+  }
+
+  /*
+   * SMALLER GAME ON LANDSCAPE PHONES
+   */
+
+  .game-container {
+    width: min(760px, 92vw);
+
+    /*
+     * The canvas is still 900x320 internally,
+     * but this makes it render smaller on short
+     * phone screens.
+     */
+    max-height: 58vh;
+  }
+
+  .game-container canvas {
+    width: 100%;
+    height: auto;
+  }
+
+  /*
+   * SMALLER GAME-OVER CARD
+   */
+
+  .game-over {
+    width: min(320px, 72%);
+    padding: 14px 18px;
+
+    border-width: 2px;
+    border-radius: 12px;
+
+    box-shadow: 4px 4px 0 #252525;
+  }
+
+  .game-over-emoji {
+    font-size: 30px;
+    margin-bottom: 2px;
+  }
+
+  .game-over-label {
+    font-size: 0.55rem;
+  }
+
+  .game-over h2 {
+    font-size: 2rem;
+  }
+
+  .game-over > p:not(.game-over-label) {
+    margin: 4px 0 9px;
+    font-size: 0.7rem;
+  }
+
+  .game-over-stats {
+    gap: 6px;
+    margin-bottom: 9px;
+  }
+
+  .game-over-stats div {
+    padding: 5px;
+    border-width: 1px;
+  }
+
+  .game-over-stats span {
+    font-size: 0.5rem;
+  }
+
+  .game-over-stats strong {
+    font-size: 1rem;
+  }
+
+  .game-over button {
+    padding: 8px 14px;
+    font-size: 0.75rem;
+    border-width: 2px;
   }
 
   .cat-instructions {
-    margin-top: 10px;
+    margin-top: 7px;
+    gap: 6px;
   }
 
   .cat-instructions > div {
-    padding: 7px 10px;
+    padding: 5px 8px;
   }
 
   .cat-instructions span {
-    font-size: 21px;
+    font-size: 18px;
+  }
+
+  .cat-instructions p {
+    font-size: 0.62rem;
+  }
+
+  .cat-instructions strong {
+    font-size: 0.58rem;
   }
 }
