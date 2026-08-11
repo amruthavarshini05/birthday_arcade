@@ -157,20 +157,42 @@ function CakeDisaster({ onBack }) {
   ])
 
   /*
+   * =====================================================
    * DRAGGING
+   * =====================================================
+   *
+   * Hold a topping in the tray and drag it directly
+   * onto the cake.
+   *
+   * Works with:
+   * - Mouse
+   * - Trackpad
+   * - Touchscreen
    */
 
-  function startDragging(type) {
+  function startDragging(
+    event,
+    type
+  ) {
     if (hasChecked) return
+
+    event.preventDefault()
 
     setDraggingDecoration({
       type,
-      x: 0,
-      y: 0,
+      x: event.clientX,
+      y: event.clientY,
     })
   }
 
-  function moveDragging(event) {
+  /*
+   * Track the pointer globally while dragging.
+   *
+   * This is important because the pointer starts on
+   * the tray button and then moves outside of it.
+   */
+
+  useEffect(() => {
     if (
       !draggingDecoration ||
       hasChecked
@@ -178,61 +200,125 @@ function CakeDisaster({ onBack }) {
       return
     }
 
-    const cake =
-      event.currentTarget.getBoundingClientRect()
-
-    setDraggingDecoration(
-      (current) => ({
-        ...current,
-        x:
-          event.clientX -
-          cake.left,
-        y:
-          event.clientY -
-          cake.top,
-      })
-    )
-  }
-
-  function placeDecoration(event) {
-    if (
-      !draggingDecoration ||
-      hasChecked
+    function handlePointerMove(
+      event
     ) {
-      return
+      event.preventDefault()
+
+      setDraggingDecoration(
+        (current) => {
+          if (!current) {
+            return null
+          }
+
+          return {
+            ...current,
+            x: event.clientX,
+            y: event.clientY,
+          }
+        }
+      )
     }
 
-    const cake =
-      event.currentTarget.getBoundingClientRect()
+    function handlePointerUp(
+      event
+    ) {
+      const cake =
+        document
+          .querySelector(
+            '.cake'
+          )
+          ?.getBoundingClientRect()
 
-    const x =
-      event.clientX -
-      cake.left
+      if (!cake) {
+        setDraggingDecoration(
+          null
+        )
 
-    const y =
-      event.clientY -
-      cake.top
+        return
+      }
 
-    setDecorations(
-      (current) => [
-        ...current,
-        {
-          id:
-            Date.now() +
-            Math.random(),
+      const x =
+        event.clientX -
+        cake.left
 
-          type:
-            draggingDecoration.type,
+      const y =
+        event.clientY -
+        cake.top
 
-          x,
+      /*
+       * Only place the topping if it was
+       * released inside the cake area.
+       */
 
-          y,
-        },
-      ]
+      const insideCake =
+        x >= 0 &&
+        x <= cake.width &&
+        y >= 0 &&
+        y <= cake.height
+
+      if (insideCake) {
+        setDecorations(
+          (current) => [
+            ...current,
+            {
+              id:
+                Date.now() +
+                Math.random(),
+
+              type:
+                draggingDecoration.type,
+
+              x,
+              y,
+            },
+          ]
+        )
+      }
+
+      setDraggingDecoration(
+        null
+      )
+    }
+
+    window.addEventListener(
+      'pointermove',
+      handlePointerMove,
+      {
+        passive: false,
+      }
     )
 
-    setDraggingDecoration(null)
-  }
+    window.addEventListener(
+      'pointerup',
+      handlePointerUp
+    )
+
+    window.addEventListener(
+      'pointercancel',
+      handlePointerUp
+    )
+
+    return () => {
+      window.removeEventListener(
+        'pointermove',
+        handlePointerMove
+      )
+
+      window.removeEventListener(
+        'pointerup',
+        handlePointerUp
+      )
+
+      window.removeEventListener(
+        'pointercancel',
+        handlePointerUp
+      )
+    }
+  }, [
+    draggingDecoration,
+    hasChecked,
+  ])
 
   /*
    * START
@@ -374,9 +460,17 @@ function CakeDisaster({ onBack }) {
           closestIndex
         )
 
+        /*
+         * Correct decoration
+         */
+
         decorationPoints +=
           50 /
           targetCake.length
+
+        /*
+         * Position accuracy
+         */
 
         if (
           closestDistance <= 15
@@ -401,6 +495,10 @@ function CakeDisaster({ onBack }) {
         }
       }
     )
+
+    /*
+     * Penalize extra decorations
+     */
 
     const extraDecorations =
       decorations.length -
@@ -428,6 +526,10 @@ function CakeDisaster({ onBack }) {
         finalScore
       )
 
+    /*
+     * Lock this cake.
+     */
+
     setHasChecked(true)
 
     setDraggingDecoration(null)
@@ -435,6 +537,11 @@ function CakeDisaster({ onBack }) {
     setScore(
       finalCakeScore
     )
+
+    /*
+     * Update run score
+     * and high score.
+     */
 
     setTotalScore(
       (currentTotal) => {
@@ -464,7 +571,9 @@ function CakeDisaster({ onBack }) {
   return (
     <main className="cake-disaster">
 
-      {/* BACKGROUND DECOR */}
+      {/* =================================================
+          BACKGROUND DECOR
+      ================================================= */}
 
       <div className="cake-confetti cake-confetti-one">
         ✦
@@ -478,7 +587,9 @@ function CakeDisaster({ onBack }) {
         ✿
       </div>
 
-      {/* HEADER */}
+      {/* =================================================
+          HEADER
+      ================================================= */}
 
       <header className="cake-disaster-header">
 
@@ -496,6 +607,7 @@ function CakeDisaster({ onBack }) {
           </span>
 
           <div>
+
             <p className="cake-eyebrow">
               BIRTHDAY BAKERY
             </p>
@@ -508,6 +620,7 @@ function CakeDisaster({ onBack }) {
               Make it pretty. Or don't.
               I'm not your mother.
             </p>
+
           </div>
 
         </div>
@@ -516,13 +629,16 @@ function CakeDisaster({ onBack }) {
 
       <div className="cake-game">
 
-        {/* START */}
+        {/* =================================================
+            START SCREEN
+        ================================================= */}
 
         {!gameStarted ? (
 
           <section className="cake-start">
 
             <div className="cake-start-art">
+
               <span className="start-cake">
                 🎂
               </span>
@@ -534,6 +650,7 @@ function CakeDisaster({ onBack }) {
               <span className="floating-star">
                 ✦
               </span>
+
             </div>
 
             <p className="section-label">
@@ -555,6 +672,7 @@ function CakeDisaster({ onBack }) {
 
               <div>
                 <span>01</span>
+
                 <p>
                   Copy the decorations
                 </p>
@@ -562,6 +680,7 @@ function CakeDisaster({ onBack }) {
 
               <div>
                 <span>02</span>
+
                 <p>
                   Get their positions right
                 </p>
@@ -569,6 +688,7 @@ function CakeDisaster({ onBack }) {
 
               <div>
                 <span>03</span>
+
                 <p>
                   Don't overdecorate
                 </p>
@@ -590,7 +710,9 @@ function CakeDisaster({ onBack }) {
 
           <section className="cake-board">
 
-            {/* HUD */}
+            {/* =================================================
+                HUD
+            ================================================= */}
 
             <div className="cake-hud">
 
@@ -641,15 +763,20 @@ function CakeDisaster({ onBack }) {
 
             </div>
 
-            {/* TARGET + PLAYER */}
+            {/* =================================================
+                TARGET + PLAYER
+            ================================================= */}
 
             <div className="cake-workspace">
+
+              {/* TARGET */}
 
               <div className="target-panel">
 
                 <div className="panel-heading">
 
                   <div>
+
                     <span className="panel-kicker">
                       CUSTOMER ORDER
                     </span>
@@ -657,6 +784,7 @@ function CakeDisaster({ onBack }) {
                     <h2>
                       MAKE THIS CAKE
                     </h2>
+
                   </div>
 
                   <span className="order-stamp">
@@ -684,9 +812,7 @@ function CakeDisaster({ onBack }) {
                           top: `${decoration.y}px`,
                         }}
                       >
-                        {
-                          decoration.type
-                        }
+                        {decoration.type}
                       </span>
                     )
                   )}
@@ -700,11 +826,16 @@ function CakeDisaster({ onBack }) {
 
               </div>
 
-              <div className="player-panel">
+              {/* PLAYER */}
+
+              <div
+                className="player-panel"
+              >
 
                 <div className="panel-heading">
 
                   <div>
+
                     <span className="panel-kicker">
                       YOUR MASTERPIECE
                     </span>
@@ -712,6 +843,7 @@ function CakeDisaster({ onBack }) {
                     <h2>
                       YOUR CAKE
                     </h2>
+
                   </div>
 
                   <span className="decor-count">
@@ -722,12 +854,14 @@ function CakeDisaster({ onBack }) {
 
                 </div>
 
-                {/* TRAY */}
+                {/* =================================================
+                    DECORATION TRAY
+                ================================================= */}
 
                 <div className="decoration-station">
 
                   <div className="station-label">
-                    DRAG TO DECORATE
+                    HOLD + DRAG TO DECORATE
                   </div>
 
                   <div className="decoration-tray">
@@ -736,11 +870,15 @@ function CakeDisaster({ onBack }) {
                       (decoration) => (
                         <button
                           key={decoration}
+                          type="button"
                           disabled={
                             hasChecked
                           }
-                          onPointerDown={() =>
+                          onPointerDown={(
+                            event
+                          ) =>
                             startDragging(
+                              event,
                               decoration
                             )
                           }
@@ -754,7 +892,9 @@ function CakeDisaster({ onBack }) {
 
                 </div>
 
-                {/* CAKE */}
+                {/* =================================================
+                    CAKE
+                ================================================= */}
 
                 <div
                   className={`cake ${
@@ -762,30 +902,14 @@ function CakeDisaster({ onBack }) {
                       ? 'cake-locked'
                       : ''
                   }`}
-                  onPointerMove={
-                    moveDragging
-                  }
-                  onPointerUp={
-                    placeDecoration
-                  }
                 >
 
-                  {draggingDecoration && (
-                    <span
-                      className="dragging-decoration"
-                      style={{
-                        left: `${draggingDecoration.x}px`,
-                        top: `${draggingDecoration.y}px`,
-                      }}
-                    >
-                      {
-                        draggingDecoration.type
-                      }
-                    </span>
-                  )}
+                  {/* Existing decorations */}
 
                   {decorations.map(
-                    (decoration) => (
+                    (
+                      decoration
+                    ) => (
                       <span
                         key={
                           decoration.id
@@ -803,19 +927,28 @@ function CakeDisaster({ onBack }) {
                     )
                   )}
 
+                  {/* Cake top */}
+
                   <div className="cake-top">
 
                     <div className="frosting">
+
                       <span />
+
                       <span />
+
                       <span />
+
                     </div>
 
                   </div>
 
+                  {/* Cake body */}
+
                   <div className="cake-body">
 
                     <div className="cake-layer" />
+
                     <div className="cake-layer" />
 
                   </div>
@@ -823,15 +956,21 @@ function CakeDisaster({ onBack }) {
                 </div>
 
                 <p className="drag-hint">
+
                   {hasChecked
                     ? 'Cake locked! 🍰'
-                    : 'Drag your ingredients onto the cake'}
+                    : 'Hold a topping and drag it onto the cake'}
+
                 </p>
 
                 <button
                   className="check-cake-button"
-                  onClick={checkCake}
-                  disabled={hasChecked}
+                  onClick={
+                    checkCake
+                  }
+                  disabled={
+                    hasChecked
+                  }
                 >
                   {hasChecked
                     ? 'CAKE CHECKED ✓'
@@ -842,7 +981,9 @@ function CakeDisaster({ onBack }) {
 
             </div>
 
-            {/* RESULT */}
+            {/* =================================================
+                RESULT
+            ================================================= */}
 
             {score !== null && (
 
@@ -897,6 +1038,7 @@ function CakeDisaster({ onBack }) {
 
                     <span>
                       🏆 HIGH SCORE
+
                       <strong>
                         {highScore}
                       </strong>
@@ -904,6 +1046,7 @@ function CakeDisaster({ onBack }) {
 
                     <span>
                       ⭐ RUN SCORE
+
                       <strong>
                         {totalScore}
                       </strong>
@@ -915,10 +1058,15 @@ function CakeDisaster({ onBack }) {
 
                 <button
                   className="next-cake-button"
-                  onClick={nextCake}
+                  onClick={
+                    nextCake
+                  }
                 >
                   NEXT CAKE
-                  <span>→</span>
+
+                  <span>
+                    →
+                  </span>
                 </button>
 
               </div>
@@ -930,6 +1078,25 @@ function CakeDisaster({ onBack }) {
         )}
 
       </div>
+
+      {/* =================================================
+          DRAGGING PREVIEW
+          Fixed to the pointer so it can travel from
+          the tray all the way onto the cake.
+      ================================================= */}
+
+      {draggingDecoration && (
+        <span
+          className="dragging-decoration"
+          style={{
+            position: 'fixed',
+            left: `${draggingDecoration.x}px`,
+            top: `${draggingDecoration.y}px`,
+          }}
+        >
+          {draggingDecoration.type}
+        </span>
+      )}
 
     </main>
   )
