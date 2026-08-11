@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './CakeDisaster.css'
 
 const DECORATIONS = [
@@ -10,46 +10,109 @@ const DECORATIONS = [
   '🍒',
 ]
 
-const TARGET_PATTERNS = [
-  [
-    { type: '🍓', x: 70, y: 45 },
-    { type: '🌸', x: 130, y: 45 },
-    { type: '🍓', x: 190, y: 45 },
-  ],
+const DECORATION_POSITIONS = [
+  // Top row
+  { x: 55, y: 30 },
+  { x: 90, y: 30 },
+  { x: 130, y: 30 },
+  { x: 170, y: 30 },
+  { x: 205, y: 30 },
 
-  [
-    { type: '🕯️', x: 80, y: 35 },
-    { type: '🕯️', x: 130, y: 30 },
-    { type: '🕯️', x: 180, y: 35 },
-    { type: '🍓', x: 100, y: 80 },
-    { type: '🍓', x: 160, y: 80 },
-  ],
+  // Middle row
+  { x: 45, y: 55 },
+  { x: 80, y: 55 },
+  { x: 115, y: 55 },
+  { x: 150, y: 55 },
+  { x: 185, y: 55 },
+  { x: 220, y: 55 },
 
-  [
-    { type: '🍫', x: 65, y: 45 },
-    { type: '🍓', x: 110, y: 70 },
-    { type: '🌸', x: 150, y: 45 },
-    { type: '🍓', x: 190, y: 70 },
-    { type: '🍫', x: 235, y: 45 },
-  ],
+  // Lower row
+  { x: 55, y: 80 },
+  { x: 90, y: 80 },
+  { x: 130, y: 80 },
+  { x: 170, y: 80 },
+  { x: 205, y: 80 },
 
-  [
-    { type: '🍒', x: 75, y: 40 },
-    { type: '🌸', x: 130, y: 70 },
-    { type: '🍒', x: 185, y: 40 },
-    { type: '🕯️', x: 110, y: 30 },
-    { type: '🕯️', x: 160, y: 30 },
-  ],
+  // Bottom row
+  { x: 80, y: 105 },
+  { x: 130, y: 105 },
+  { x: 180, y: 105 },
 ]
+
+function generateTarget(round = 1) {
+  const positions = [...DECORATION_POSITIONS]
+
+  const decorationCount = Math.min(
+    3 + Math.floor((round - 1) / 2),
+    positions.length
+  )
+
+  const target = []
+
+  for (let i = 0; i < decorationCount; i++) {
+    const positionIndex = Math.floor(
+      Math.random() * positions.length
+    )
+
+    const position = positions.splice(
+      positionIndex,
+      1
+    )[0]
+
+    const type =
+      DECORATIONS[
+        Math.floor(
+          Math.random() * DECORATIONS.length
+        )
+      ]
+
+    target.push({
+      type,
+      x: position.x,
+      y: position.y,
+    })
+  }
+
+  return target
+}
 
 function CakeDisaster({ onBack }) {
   const [gameStarted, setGameStarted] = useState(false)
   const [targetCake, setTargetCake] = useState(null)
 
   const [decorations, setDecorations] = useState([])
-  const [draggingDecoration, setDraggingDecoration] = useState(null)
+  const [draggingDecoration, setDraggingDecoration] =
+    useState(null)
 
-  const [score, setScore] = useState(null)
+    const [score, setScore] = useState(null)
+    const [totalScore, setTotalScore] = useState(0)
+    const [highScore, setHighScore] = useState(() => {
+      const savedScore = localStorage.getItem(
+        'cakeDisasterHighScore'
+      )
+    
+      return savedScore ? Number(savedScore) : 0
+    })
+    
+    const [round, setRound] = useState(1)
+    const [timeLeft, setTimeLeft] = useState(30)
+
+  useEffect(() => {
+    if (!gameStarted || score !== null) {
+      return
+    }
+  
+    if (timeLeft <= 0) {
+      checkCake()
+      return
+    }
+  
+    const timer = setTimeout(() => {
+      setTimeLeft((current) => current - 1)
+    }, 1000)
+  
+    return () => clearTimeout(timer)
+  }, [gameStarted, timeLeft, score])
 
   function startDragging(type) {
     setDraggingDecoration({
@@ -62,7 +125,8 @@ function CakeDisaster({ onBack }) {
   function moveDragging(event) {
     if (!draggingDecoration) return
 
-    const cake = event.currentTarget.getBoundingClientRect()
+    const cake =
+      event.currentTarget.getBoundingClientRect()
 
     setDraggingDecoration((current) => ({
       ...current,
@@ -74,7 +138,8 @@ function CakeDisaster({ onBack }) {
   function placeDecoration(event) {
     if (!draggingDecoration) return
 
-    const cake = event.currentTarget.getBoundingClientRect()
+    const cake =
+      event.currentTarget.getBoundingClientRect()
 
     const x = event.clientX - cake.left
     const y = event.clientY - cake.top
@@ -93,56 +158,129 @@ function CakeDisaster({ onBack }) {
   }
 
   function startGame() {
-    const randomPattern =
-      TARGET_PATTERNS[
-        Math.floor(Math.random() * TARGET_PATTERNS.length)
-      ]
-
-    setTargetCake(randomPattern)
+    const newTarget = generateTarget(1)
+  
+    setRound(1)
+    setTargetCake(newTarget)
     setDecorations([])
     setScore(null)
+    setTotalScore(0)
+    setTimeLeft(30)
     setGameStarted(true)
+  }
+
+  function nextCake() {
+    const nextRound = round + 1
+    const newTarget = generateTarget(nextRound)
+  
+    setRound(nextRound)
+    setTargetCake(newTarget)
+    setDecorations([])
+    setScore(null)
+    setTimeLeft(
+      Math.max(10, 30 - nextRound * 2)
+    )
   }
 
   function checkCake() {
     if (!targetCake) return
 
-    let newScore = 0
+    let decorationPoints = 0
+    let positionPoints = 0
 
-    const targetCounts = {}
-    const playerCounts = {}
+    const usedDecorations = new Set()
 
-    targetCake.forEach((decoration) => {
-      targetCounts[decoration.type] =
-        (targetCounts[decoration.type] || 0) + 1
-    })
+    targetCake.forEach((target) => {
+      let closestDistance = Infinity
+      let closestIndex = -1
 
-    decorations.forEach((decoration) => {
-      playerCounts[decoration.type] =
-        (playerCounts[decoration.type] || 0) + 1
-    })
+      decorations.forEach(
+        (decoration, index) => {
+          if (usedDecorations.has(index)) {
+            return
+          }
 
-    // Correct decorations: 10 points each
-    Object.entries(targetCounts).forEach(
-      ([type, count]) => {
-        const playerCount = playerCounts[type] || 0
+          if (decoration.type !== target.type) {
+            return
+          }
 
-        newScore += Math.min(playerCount, count) * 10
+          const dx =
+            decoration.x - target.x
+
+          const dy =
+            decoration.y - target.y
+
+          const distance = Math.sqrt(
+            dx * dx + dy * dy
+          )
+
+          if (distance < closestDistance) {
+            closestDistance = distance
+            closestIndex = index
+          }
+        }
+      )
+
+      if (closestIndex === -1) {
+        return
       }
-    )
 
-    // Penalty for unnecessary decorations
+      usedDecorations.add(closestIndex)
+
+      // Correct decoration
+      decorationPoints += 50 / targetCake.length
+
+      // Position accuracy
+      if (closestDistance <= 15) {
+        positionPoints += 50 / targetCake.length
+      } else if (closestDistance <= 30) {
+        positionPoints +=
+          (50 / targetCake.length) * 0.7
+      } else if (closestDistance <= 50) {
+        positionPoints +=
+          (50 / targetCake.length) * 0.4
+      }
+    })
+
+    // Penalize extra decorations
     const extraDecorations =
-      Math.max(0, decorations.length - targetCake.length)
+      decorations.length -
+      usedDecorations.size
 
-    newScore -= extraDecorations * 5
+    const penalty =
+      Math.max(0, extraDecorations) * 5
 
-    newScore = Math.max(
+    const finalScore = Math.max(
       0,
-      Math.min(100, newScore)
+      Math.round(
+        decorationPoints +
+          positionPoints -
+          penalty
+      )
     )
 
-    setScore(newScore)
+    const finalCakeScore = Math.min(
+        100,
+        finalScore
+      )
+      
+      setScore(finalCakeScore)
+      
+      setTotalScore((currentTotal) => {
+        const newTotal =
+          currentTotal + finalCakeScore
+      
+        if (newTotal > highScore) {
+          setHighScore(newTotal)
+      
+          localStorage.setItem(
+            'cakeDisasterHighScore',
+            newTotal.toString()
+          )
+        }
+      
+        return newTotal
+      })
   }
 
   return (
@@ -161,7 +299,8 @@ function CakeDisaster({ onBack }) {
           <h1>🍰 Cake Disaster</h1>
 
           <p>
-            Let's make a cake. What could possibly go wrong?
+            Let's make a cake. What could
+            possibly go wrong?
           </p>
         </div>
 
@@ -180,7 +319,8 @@ function CakeDisaster({ onBack }) {
             <h2>Ready to bake?</h2>
 
             <p>
-              Recreate the target cake as closely as you can.
+              Recreate the target cake as
+              closely as you can.
             </p>
 
             <button onClick={startGame}>
@@ -193,16 +333,39 @@ function CakeDisaster({ onBack }) {
 
           <div className="cake-board">
 
-            {/* TARGET CAKE */}
+            {/* ROUND */}
+
+            <div className="cake-status">
+  <span>
+    ROUND {round}
+  </span>
+
+  <span
+    className={
+      timeLeft <= 5
+        ? 'timer danger'
+        : 'timer'
+    }
+  >
+    ⏱️ {timeLeft}s
+  </span>
+</div>
+
+            {/* TARGET */}
 
             <h2>MAKE THIS CAKE</h2>
 
             <div className="target-cake">
 
+              <div className="target-cake-top"></div>
+
+              <div className="target-cake-body"></div>
+
               {targetCake?.map(
                 (decoration, index) => (
                   <span
                     key={index}
+                    className="target-decoration"
                     style={{
                       left: `${decoration.x}px`,
                       top: `${decoration.y}px`,
@@ -297,7 +460,7 @@ function CakeDisaster({ onBack }) {
               Drag decorations onto your cake!
             </p>
 
-            {/* CHECK BUTTON */}
+            {/* CHECK */}
 
             <button
               className="check-cake-button"
@@ -309,26 +472,55 @@ function CakeDisaster({ onBack }) {
             {/* SCORE */}
 
             {score !== null && (
-              <div className="cake-score">
-                <h2>
-                  CAKE SCORE: {score}/100
-                </h2>
+  <div className="cake-score">
+
+    <div className="score-board">
+      <span>
+        🏆 HIGH SCORE: {highScore}
+      </span>
+
+      <span>
+        ⭐ RUN SCORE: {totalScore}
+      </span>
+    </div>
+
+    <h2>
+      CAKE SCORE: {score}/100
+    </h2>
 
                 <p>
                   {score === 100
                     ? 'PERFECT CAKE. 👑'
-                    : score >= 70
+                    : score >= 90
                     ? 'Okayyyy pastry chef. 😌'
+                    : score >= 80
+                    ? 'Just Do It (Nike) 😎'
+                    : score >= 70
+                    ? 'Do you hate me?!'
+                    : score >= 60
+                    ? 'Uhhhh.... Ok?'
+                    : score >= 50
+                    ? 'Does my disappointment amuse you?'
                     : score >= 40
                     ? 'Questionable... but edible. 🤨'
-                    : 'What the hell happened here? 💀'}
+                    : score >= 30
+                    ? 'Okayyyy pastry chef. 😌'
+                    : score >= 20
+                    ? 'GET A GRIP BRO!!'
+                    : score >= 10
+                    ? 'You\'re doing this on purpose aren\'t you? 😬'
+                    : score === 0
+                    ? 'What the hell happened here? 💀'
+                    : 'It\'s like you won\'t even try. 😭'
+                  }
                 </p>
 
-                <button onClick={startGame}>
-                  NEXT CAKE 🍰
-                </button>
-              </div>
-            )}
+                <button onClick={nextCake}>
+      NEXT CAKE 🍰
+    </button>
+
+  </div>
+)}
 
           </div>
 

@@ -47,24 +47,43 @@
   }
   
   /* TARGET CAKE */
-  
   .target-cake {
     position: relative;
     width: 260px;
-    height: 110px;
+    height: 130px;
     margin: 10px auto 20px;
-    border: 2px dashed #5b3a42;
-    border-radius: 12px;
-    background: #fff8f4;
   }
   
-  .target-cake span {
+  .target-cake-top {
     position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 220px;
+    height: 55px;
+    border-radius: 50%;
+    background: #ffd6e7;
+    border: 3px solid #5b3a42;
+  }
+  
+  .target-cake-body {
+    position: absolute;
+    top: 45px;
+    left: 20px;
+    width: 220px;
+    height: 70px;
+    background: #f3a6b8;
+    border: 3px solid #5b3a42;
+    border-top: none;
+    border-radius: 0 0 15px 15px;
+  }
+  
+  .target-decoration {
+    position: absolute;
+    z-index: 5;
     font-size: 24px;
     line-height: 1;
     transform: translate(-50%, -50%);
   }
-  
   /* DECORATION TRAY */
   
   .decoration-tray {
@@ -233,4 +252,46 @@
   
   .cake-score button:hover {
     transform: translateY(-2px);
+  }
+
+  .cake-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .timer {
+    min-width: 70px;
+  }
+  
+  .timer.danger {
+    animation: timer-pulse 0.5s infinite alternate;
+  }
+  
+  @keyframes timer-pulse {
+    from {
+      transform: scale(1);
+    }
+  
+    to {
+      transform: scale(1.12);
+    }
+  }
+
+  .score-board {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .score-board span {
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: #fff8f4;
   }

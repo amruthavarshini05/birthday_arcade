@@ -1,0 +1,322 @@
+.brain-cell {
+    min-height: 100vh;
+    padding: 30px;
+  }
+  
+  .brain-cell-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .brain-cell-header h1 {
+    margin: 0;
+  }
+  
+  .brain-cell-header p {
+    margin: 5px 0 0;
+  }
+  
+  /* START SCREEN */
+  
+  .brain-start {
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .brain-preview {
+    font-size: 100px;
+    margin-bottom: 20px;
+  }
+  
+  .brain-start button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  /* POINTS */
+  
+  .brain-points {
+    width: 280px;
+    margin: 20px auto 25px;
+    padding: 15px 20px;
+    border: 2px solid #5b3a42;
+    border-radius: 14px;
+    background: #fff8f4;
+  }
+  
+  .brain-points h3 {
+    margin: 0 0 10px;
+  }
+  
+  .brain-points div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 7px 0;
+  }
+  
+  .brain-points strong {
+    min-width: 35px;
+  }
+  
+  /* GAME */
+  
+  .brain-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* SCORE BOARD */
+  
+  .brain-score-board {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  .brain-score-board span {
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #fff8f4;
+  }
+  
+  /* PLAY AREA */
+  
+  .brain-play-area {
+    position: relative;
+    width: min(700px, 90vw);
+    height: 500px;
+    overflow: hidden;
+    border: 3px solid #5b3a42;
+    border-radius: 20px;
+    background: #fff8f4;
+  }
+  
+  /* FALLING OBJECTS */
+  
+  .falling-object {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-size: 32px;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+  }
+  
+  /* PLAYER */
+  
+  .brain-player {
+    position: absolute;
+    bottom: 20px;
+    transform: translateX(-50%);
+    font-size: 50px;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+  }
+  
+  /* SCORE POPUPS */
+  
+  .score-popup {
+    position: absolute;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    font-weight: 900;
+    pointer-events: none;
+    animation: scorePopup 0.7s ease-out forwards;
+  }
+  
+  .score-popup.positive {
+    color: #4b8b52;
+  }
+  
+  .score-popup.negative {
+    color: #b34b4b;
+  }
+  
+  @keyframes scorePopup {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  
+    100% {
+      opacity: 0;
+      transform: translate(
+        -50%,
+        calc(-50% - 35px)
+      ) scale(1.15);
+    }
+  }
+  
+  /* MOBILE CONTROLS */
+  
+  .brain-controls {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+  }
+  
+  .brain-controls button {
+    width: 90px;
+    height: 60px;
+    border: 2px solid #5b3a42;
+    border-radius: 14px;
+    background: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  
+  .brain-controls button:active {
+    transform: scale(0.94);
+  }
+  
+  /* GAME OVER */
+  
+  .brain-game-over {
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .game-over-icon {
+    font-size: 80px;
+    margin-bottom: 15px;
+  }
+  
+  .brain-game-over h2 {
+    margin: 5px 0;
+  }
+  
+  .brain-game-over p {
+    margin: 5px 0 25px;
+  }
+  
+  .final-score,
+  .final-high-score {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 8px 0;
+  }
+  
+  .final-score span,
+  .final-high-score span {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .final-score strong {
+    font-size: 42px;
+  }
+  
+  .final-high-score strong {
+    font-size: 24px;
+  }
+  
+  .new-high-score {
+    margin: 20px 0;
+  }
+  
+  .brain-game-over button {
+    margin-top: 20px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  /* MOBILE */
+  
+  @media (max-width: 600px) {
+    .brain-cell {
+      padding: 20px 12px;
+    }
+  
+    .brain-cell-header {
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+  
+    .brain-cell-header h1 {
+      font-size: 24px;
+    }
+  
+    .brain-cell-header p {
+      font-size: 14px;
+    }
+  
+    .brain-play-area {
+      width: 94vw;
+      height: 65vh;
+      min-height: 400px;
+      max-height: 600px;
+    }
+  
+    .brain-score-board {
+      width: 94vw;
+      gap: 6px;
+      justify-content: space-between;
+    }
+  
+    .brain-score-board span {
+      padding: 6px 7px;
+      font-size: 12px;
+    }
+  
+    .falling-object {
+      font-size: 28px;
+    }
+  
+    .brain-player {
+      font-size: 46px;
+    }
+  
+    .brain-controls {
+      gap: 20px;
+      margin-top: 15px;
+    }
+  
+    .brain-controls button {
+      width: 110px;
+      height: 65px;
+      font-size: 30px;
+    }
+  
+    .brain-start {
+      min-height: 70vh;
+    }
+  
+    .brain-preview {
+      font-size: 80px;
+    }
+  
+    .brain-game-over {
+      min-height: 70vh;
+    }
+  }

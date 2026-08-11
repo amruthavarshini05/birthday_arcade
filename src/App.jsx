@@ -2,21 +2,42 @@ import { useState } from 'react'
 import './App.css'
 import CatRun from './games/CatRun'
 import CakeDisaster from './games/CakeDisaster'
+import BrainCell from './games/BrainCell'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('arcade')
 
   if (currentPage === 'cat-run') {
-    return <CatRun onBack={() => setCurrentPage('arcade')} />
+    return (
+      <CatRun
+        onBack={() => setCurrentPage('arcade')}
+      />
+    )
   }
+
   if (currentPage === 'cake-disaster') {
-    return <CakeDisaster onBack={() => setCurrentPage('arcade')} />
+    return (
+      <CakeDisaster
+        onBack={() => setCurrentPage('arcade')}
+      />
+    )
+  }
+
+  if (currentPage === 'brain-cell') {
+    return (
+      <BrainCell
+        onBack={() => setCurrentPage('arcade')}
+      />
+    )
   }
 
   return (
     <main className="arcade">
-      <header className="arcade-header">
-        <p className="eyebrow">WELCOME TO THE</p>
+
+      <header className="hero">
+        <p className="eyebrow">
+          WELCOME TO THE
+        </p>
 
         <h1>Birthday Arcade 🎮</h1>
 
@@ -26,8 +47,14 @@ function App() {
       </header>
 
       <section className="games">
+
+        {/* CAT RUN */}
+
         <div className="game-card">
-          <div className="game-icon">🐈</div>
+
+          <div className="game-icon">
+            🐈
+          </div>
 
           <h2>Cat Run</h2>
 
@@ -35,13 +62,23 @@ function App() {
             How long can the cat survive?
           </p>
 
-          <button onClick={() => setCurrentPage('cat-run')}>
+          <button
+            onClick={() =>
+              setCurrentPage('cat-run')
+            }
+          >
             PLAY
           </button>
+
         </div>
 
+        {/* CAKE DISASTER */}
+
         <div className="game-card">
-          <div className="game-icon">🍰</div>
+
+          <div className="game-icon">
+            🍰
+          </div>
 
           <h2>Cake Disaster</h2>
 
@@ -49,13 +86,23 @@ function App() {
             Make a cake. Make questionable choices.
           </p>
 
-          <button onClick={() => setCurrentPage('cake-disaster')}>
+          <button
+            onClick={() =>
+              setCurrentPage('cake-disaster')
+            }
+          >
             PLAY
           </button>
+
         </div>
 
-          <div className="game-card locked">
-          <div className="game-icon">🧠</div>
+        {/* BRAIN CELL */}
+
+        <div className="game-card">
+
+          <div className="game-icon">
+            🧠
+          </div>
 
           <h2>Brain Cell</h2>
 
@@ -63,15 +110,24 @@ function App() {
             Catch what little remains.
           </p>
 
-          <button disabled>
-            LOCKED 🔒
+          <button
+            onClick={() =>
+              setCurrentPage('brain-cell')
+            }
+          >
+            PLAY
           </button>
+
         </div>
+
       </section>
 
       <footer>
-        <p>Made with questionable amounts of effort 💌</p>
+        <p>
+          Made with questionable amounts of effort 💌
+        </p>
       </footer>
+
     </main>
   )
 }
