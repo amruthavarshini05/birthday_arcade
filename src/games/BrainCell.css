@@ -987,6 +987,48 @@
 
 
 /* =========================================================
+   SCORE POPUPS
+   ========================================================= */
+
+.score-popup {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  font-weight: 950;
+  letter-spacing: -0.03em;
+  text-shadow: 2px 2px 0 #000;
+  animation: score-popup-rise 0.7s ease-out forwards;
+}
+
+.score-popup-positive {
+  color: #76e0a2;
+  filter: drop-shadow(0 0 6px rgba(118, 224, 162, 0.35));
+}
+
+.score-popup-negative {
+  color: #ff7183;
+  filter: drop-shadow(0 0 6px rgba(255, 113, 131, 0.3));
+}
+
+@keyframes score-popup-rise {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20%) scale(0.7);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -150%) scale(1);
+  }
+}
+
+
+/* =========================================================
    PLAYER
    ========================================================= */
 
@@ -1474,6 +1516,10 @@
     height: 38px;
 
     font-size: 25px;
+  }
+
+  .score-popup {
+    font-size: 0.9rem;
   }
 
   .brain-player {

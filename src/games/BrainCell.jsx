@@ -38,6 +38,8 @@ function BrainCell({ onBack }) {
       : 0
   })
 
+  const [scorePopups, setScorePopups] = useState([])
+
   /* =====================================================
      REFS
      ===================================================== */
@@ -405,6 +407,31 @@ function BrainCell({ onBack }) {
               setScore(
                 scoreRef.current
               )
+
+              const popupId =
+                Date.now() + Math.random()
+
+              setScorePopups(
+                (current) => [
+                  ...current,
+                  {
+                    id: popupId,
+                    points: object.points,
+                    x: object.x,
+                    y: nextY,
+                  },
+                ]
+              )
+
+              setTimeout(() => {
+                setScorePopups(
+                  (current) =>
+                    current.filter(
+                      (popup) =>
+                        popup.id !== popupId
+                    )
+                )
+              }, 700)
 
 
               /* ========================================
@@ -931,6 +958,30 @@ function BrainCell({ onBack }) {
                   {object.type}
                 </span>
 
+              )
+            )}
+
+
+            {/* SCORE POPUPS */}
+
+            {scorePopups.map(
+              (popup) => (
+                <span
+                  key={popup.id}
+                  className={`score-popup ${
+                    popup.points > 0
+                      ? 'score-popup-positive'
+                      : 'score-popup-negative'
+                  }`}
+                  style={{
+                    left: `${popup.x}%`,
+                    top: `${popup.y}%`,
+                  }}
+                >
+                  {popup.points > 0
+                    ? `+${popup.points}`
+                    : popup.points}
+                </span>
               )
             )}
 
