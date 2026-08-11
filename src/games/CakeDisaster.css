@@ -295,3 +295,9 @@
     border-radius: 8px;
     background: #fff8f4;
   }
+
+  .decoration-tray button:disabled,
+.check-cake-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

@@ -1,152 +1,553 @@
 .cat-run {
-    min-height: 100vh;
-    padding: 30px;
-    background: #f7f3ea;
-    color: #252525;
+  min-height: 100vh;
+  padding: 32px 30px 45px;
+  background: #f7f3ea;
+  color: #252525;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.cat-run-header {
+  max-width: 1000px;
+  margin: 0 auto 25px;
+
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.cat-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.cat-title-icon {
+  width: 62px;
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff;
+  border: 3px solid #252525;
+  border-radius: 14px;
+
+  font-size: 34px;
+
+  box-shadow: 5px 5px 0 #252525;
+}
+
+.eyebrow {
+  margin: 0 0 2px;
+
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+
+  color: #777;
+}
+
+.cat-run-header h1 {
+  margin: 0;
+
+  font-size: 3rem;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.cat-run-header p:not(.eyebrow) {
+  margin: 7px 0 0;
+
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+.back-button {
+  padding: 10px 16px;
+
+  border: 2px solid #252525;
+  border-radius: 9px;
+
+  background: white;
+  color: #252525;
+
+  cursor: pointer;
+  font-weight: 800;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 3px 3px 0 #252525;
+}
+
+/* =========================
+   GAME INFO
+========================= */
+
+.game-info {
+  max-width: 900px;
+  margin: 0 auto 15px;
+
+  display: grid;
+  grid-template-columns:
+    1fr 1fr 1fr;
+
+  gap: 12px;
+}
+
+.info-card {
+  min-height: 62px;
+  padding: 10px 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  background: #fff;
+
+  border: 2px solid #252525;
+  border-radius: 12px;
+}
+
+.info-card span {
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #777;
+}
+
+.info-card strong {
+  font-size: 1.25rem;
+}
+
+.controls-card strong {
+  font-size: 0.9rem;
+}
+
+/* =========================
+   GAME CONTAINER
+========================= */
+
+.game-container {
+  position: relative;
+
+  width: min(900px, 100%);
+  margin: 0 auto;
+
+  overflow: hidden;
+
+  background: #fff;
+
+  border: 3px solid #252525;
+  border-radius: 18px;
+
+  box-shadow: 9px 9px 0 #252525;
+
+  touch-action: none;
+}
+
+.game-container canvas {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  cursor: pointer;
+
+  touch-action: none;
+}
+
+/* =========================
+   GAME OVER
+========================= */
+
+.game-over {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: min(380px, 82%);
+
+  transform:
+    translate(-50%, -50%);
+
+  padding: 28px;
+
+  background: white;
+
+  border: 3px solid #252525;
+  border-radius: 18px;
+
+  text-align: center;
+
+  box-shadow: 7px 7px 0 #252525;
+}
+
+.game-over-emoji {
+  font-size: 50px;
+  margin-bottom: 5px;
+}
+
+.game-over-label {
+  margin: 0;
+
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+
+  color: #777;
+}
+
+.game-over h2 {
+  margin: 4px 0 0;
+
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.game-over > p:not(.game-over-label) {
+  margin: 8px 0 20px;
+  color: #666;
+}
+
+.game-over-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+
+  margin-bottom: 20px;
+}
+
+.game-over-stats div {
+  padding: 10px;
+
+  border: 2px solid #252525;
+  border-radius: 10px;
+}
+
+.game-over-stats span {
+  display: block;
+
+  font-size: 0.65rem;
+  font-weight: 900;
+
+  color: #777;
+}
+
+.game-over-stats strong {
+  display: block;
+
+  margin-top: 3px;
+
+  font-size: 1.5rem;
+}
+
+.game-over button {
+  width: 100%;
+
+  padding: 13px 24px;
+
+  border: 3px solid #252525;
+  border-radius: 9px;
+
+  background: #252525;
+  color: white;
+
+  font-weight: 900;
+  font-size: 1rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.game-over button:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 #777;
+}
+
+/* =========================
+   INSTRUCTIONS
+========================= */
+
+.cat-instructions {
+  max-width: 900px;
+
+  margin: 25px auto 0;
+
+  display: grid;
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 12px;
+}
+
+.cat-instructions > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 15px;
+
+  background: rgba(255, 255, 255, 0.75);
+
+  border: 2px solid #252525;
+  border-radius: 12px;
+}
+
+.cat-instructions span {
+  font-size: 27px;
+}
+
+.cat-instructions p {
+  margin: 0;
+
+  font-size: 0.78rem;
+  line-height: 1.3;
+  color: #666;
+}
+
+.cat-instructions strong {
+  color: #252525;
+  font-size: 0.72rem;
+}
+
+/* =========================
+   LANDSCAPE WARNING
+========================= */
+
+.landscape-warning {
+  display: none;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+  .cat-run {
+    padding: 20px 12px 30px;
   }
-  
+
   .cat-run-header {
-    max-width: 1000px;
-    margin: 0 auto 30px;
-  
-    display: flex;
-    align-items: center;
-    gap: 25px;
+    gap: 12px;
+    margin-bottom: 18px;
   }
-  
+
+  .cat-title {
+    gap: 10px;
+  }
+
+  .cat-title-icon {
+    width: 48px;
+    height: 48px;
+
+    font-size: 26px;
+
+    border-width: 2px;
+    box-shadow: 3px 3px 0 #252525;
+  }
+
   .cat-run-header h1 {
-    margin: 0;
-    font-size: 3rem;
+    font-size: 2rem;
   }
-  
-  .cat-run-header p {
-    margin: 5px 0 0;
-    color: #666;
+
+  .cat-run-header p:not(.eyebrow) {
+    font-size: 0.8rem;
   }
-  
+
   .back-button {
-    padding: 10px 16px;
-  
+    padding: 8px 11px;
+    font-size: 0.78rem;
+  }
+
+  .game-info {
+    grid-template-columns:
+      1fr 1fr;
+
+    gap: 8px;
+
+    margin-bottom: 10px;
+  }
+
+  .info-card {
+    min-height: 52px;
+    padding: 8px 10px;
+  }
+
+  .info-card span {
+    font-size: 0.58rem;
+  }
+
+  .info-card strong {
+    font-size: 1rem;
+  }
+
+  .controls-card {
+    grid-column: 1 / -1;
+  }
+
+  .controls-card strong {
+    font-size: 0.78rem;
+  }
+
+  .game-container {
+    border-radius: 13px;
+    box-shadow: 5px 5px 0 #252525;
+  }
+
+  .cat-instructions {
+    grid-template-columns: 1fr;
+
+    gap: 8px;
+
+    margin-top: 15px;
+  }
+
+  .cat-instructions > div {
+    padding: 9px 12px;
+  }
+}
+
+/* =========================
+   PHONE PORTRAIT WARNING
+========================= */
+
+@media (max-width: 700px) and (orientation: portrait) {
+  .landscape-warning {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+
+    background: #252525;
+  }
+
+  .landscape-warning-card {
+    width: min(390px, 90vw);
+
+    padding: 30px 24px;
+
+    background: #f7f3ea;
+
+    border: 3px solid white;
+    border-radius: 20px;
+
+    text-align: center;
+
+    box-shadow: 8px 8px 0 white;
+  }
+
+  .rotate-icon {
+    font-size: 60px;
+    margin-bottom: 12px;
+  }
+
+  .landscape-warning-card h2 {
+    margin: 0;
+
+    font-size: 1.45rem;
+    line-height: 1.05;
+  }
+
+  .landscape-warning-card p {
+    margin: 12px 0 18px;
+
+    color: #666;
+
+    line-height: 1.4;
+  }
+
+  .landscape-warning-card span {
+    display: inline-block;
+
+    padding: 8px 12px;
+
     border: 2px solid #252525;
     border-radius: 8px;
-  
+
     background: white;
-    color: #252525;
-  
-    cursor: pointer;
-    font-weight: 700;
-  }
-  
-  .scoreboard {
-    max-width: 900px;
-    margin: 0 auto 15px;
-  
-    display: flex;
-    justify-content: flex-end;
-    gap: 30px;
-  }
-  
-  .scoreboard div {
-    display: flex;
-    gap: 8px;
-    align-items: baseline;
-  }
-  
-  .scoreboard span {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #777;
-  }
-  
-  .scoreboard strong {
-    font-size: 1.3rem;
-  }
-  
-  .game-container {
-    position: relative;
-  
-    width: min(900px, 100%);
-    margin: 0 auto;
-  
-    overflow: hidden;
-  
-    background: white;
-  
-    border: 3px solid #252525;
-    border-radius: 15px;
-  
-    box-shadow: 8px 8px 0 #252525;
-  }
-  
-  .game-container canvas {
-    display: block;
-    width: 100%;
-    height: auto;
-  
-    cursor: pointer;
-  }
-  
-  .game-over {
-    position: absolute;
-  
-    top: 50%;
-    left: 50%;
-  
-    transform: translate(-50%, -50%);
-  
-    padding: 30px 40px;
-  
-    background: white;
-  
-    border: 3px solid #252525;
-    border-radius: 15px;
-  
-    text-align: center;
-  
-    box-shadow: 6px 6px 0 #252525;
-  }
-  
-  .game-over h2 {
-    margin: 0;
-    font-size: 2.5rem;
-  }
-  
-  .game-over p {
-    color: #666;
-  }
-  
-  .game-over button {
-    padding: 12px 24px;
-  
-    border: 3px solid #252525;
-    border-radius: 8px;
-  
-    background: #252525;
-    color: white;
-  
+
+    font-size: 0.8rem;
     font-weight: 800;
-  
-    cursor: pointer;
   }
-  
-  .game-over button:hover {
-    transform: translateY(-2px);
+
+  .cat-run {
+    min-height: 100vh;
   }
-  
-  @media (max-width: 600px) {
-    .cat-run {
-      padding: 20px;
-    }
-  
-    .cat-run-header {
-      align-items: flex-start;
-    }
-  
-    .cat-run-header h1 {
-      font-size: 2rem;
-    }
-  
-    .scoreboard {
-      justify-content: space-between;
-    }
+}
+
+/* =========================
+   LANDSCAPE PHONE
+========================= */
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .cat-run {
+    padding: 12px 18px 20px;
   }
+
+  .cat-run-header {
+    margin-bottom: 10px;
+  }
+
+  .cat-title-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+  }
+
+  .cat-run-header h1 {
+    font-size: 1.7rem;
+  }
+
+  .cat-run-header p:not(.eyebrow) {
+    font-size: 0.72rem;
+    margin-top: 3px;
+  }
+
+  .game-info {
+    margin-bottom: 8px;
+  }
+
+  .info-card {
+    min-height: 44px;
+    padding: 5px 10px;
+  }
+
+  .cat-instructions {
+    margin-top: 10px;
+  }
+
+  .cat-instructions > div {
+    padding: 7px 10px;
+  }
+
+  .cat-instructions span {
+    font-size: 21px;
+  }
+}
