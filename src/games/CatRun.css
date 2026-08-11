@@ -1,85 +1,213 @@
+/* =========================================================
+   CAT RUN
+========================================================= */
+
 .cat-run {
+  position: relative;
+
   min-height: 100vh;
-  padding: 32px 30px 45px;
-  background: #f7f3ea;
+
+  padding:
+    34px
+    30px
+    50px;
+
+  overflow: hidden;
+
   color: #252525;
+
+  background:
+    radial-gradient(
+      circle at 8% 10%,
+      rgba(255, 210, 125, 0.28),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 92% 15%,
+      rgba(135, 206, 235, 0.25),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(255, 174, 102, 0.18),
+      transparent 35%
+    ),
+    #f7f3ea;
 }
 
-/* =========================
+/* =========================================================
+   DECOR
+========================================================= */
+
+.cat-decor {
+  position: absolute;
+
+  pointer-events: none;
+  user-select: none;
+
+  opacity: 0.35;
+}
+
+.cat-decor-one {
+  top: 110px;
+  left: 4%;
+
+  font-size: 3rem;
+
+  color: #e3a13d;
+
+  transform: rotate(-15deg);
+}
+
+.cat-decor-two {
+  top: 310px;
+  right: 4%;
+
+  font-size: 2rem;
+
+  transform: rotate(12deg);
+}
+
+.cat-decor-three {
+  bottom: 100px;
+  left: 7%;
+
+  font-size: 1.5rem;
+
+  letter-spacing: 0.4em;
+
+  color: #8eaa9a;
+}
+
+/* =========================================================
    HEADER
-========================= */
+========================================================= */
 
 .cat-run-header {
-  max-width: 1000px;
-  margin: 0 auto 25px;
+  position: relative;
+  z-index: 2;
+
+  max-width: 1050px;
+
+  margin:
+    0
+    auto
+    28px;
 
   display: flex;
   align-items: center;
-  gap: 24px;
+
+  gap: 18px;
 }
 
 .cat-title {
   display: flex;
   align-items: center;
+
   gap: 15px;
 }
 
-.cat-title-icon {
-  width: 62px;
-  height: 62px;
+.cat-title-art {
+  width: 68px;
+  height: 68px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: #fff;
-  border: 3px solid #252525;
-  border-radius: 14px;
+  border:
+    3px
+    solid
+    #252525;
 
-  font-size: 34px;
+  border-radius: 17px;
 
-  box-shadow: 5px 5px 0 #252525;
+  background: white;
+
+  box-shadow:
+    5px
+    5px
+    0
+    #252525;
+
+  overflow: hidden;
 }
 
-.eyebrow {
-  margin: 0 0 2px;
+.cat-title-art img {
+  width: 65px;
+  height: auto;
 
-  font-size: 0.7rem;
+  image-rendering: pixelated;
+
+  transform:
+    scale(1.15);
+
+  transition:
+    transform 0.2s ease;
+}
+
+.cat-title-art:hover img {
+  transform:
+    scale(1.25)
+    translateX(3px);
+}
+
+.cat-eyebrow {
+  margin:
+    0
+    0
+    4px;
+
+  font-size: 0.62rem;
+
   font-weight: 900;
-  letter-spacing: 0.16em;
 
-  color: #777;
+  letter-spacing: 0.18em;
+
+  color: #9a866c;
 }
 
-.cat-run-header h1 {
+.cat-title h1 {
   margin: 0;
 
-  font-size: 3rem;
+  font-size: 2.7rem;
+
   line-height: 0.95;
-  letter-spacing: -0.04em;
+
+  letter-spacing: -0.05em;
 }
 
-.cat-run-header p:not(.eyebrow) {
-  margin: 7px 0 0;
+.cat-title p:last-child {
+  margin:
+    7px
+    0
+    0;
 
-  color: #666;
-  font-size: 0.95rem;
+  color: #6f6b63;
 }
 
-/* =========================
+/* =========================================================
    BACK BUTTON
-========================= */
+========================================================= */
 
 .back-button {
-  padding: 10px 16px;
+  padding:
+    10px
+    15px;
 
-  border: 2px solid #252525;
+  border:
+    2px
+    solid
+    #252525;
+
   border-radius: 9px;
 
   background: white;
+
   color: #252525;
 
   cursor: pointer;
+
   font-weight: 800;
 
   transition:
@@ -88,75 +216,180 @@
 }
 
 .back-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 3px 3px 0 #252525;
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    3px
+    3px
+    0
+    #252525;
 }
 
-/* =========================
-   GAME INFO
-========================= */
+/* =========================================================
+   SCOREBOARD
+========================================================= */
 
-.game-info {
+.scoreboard {
+  position: relative;
+  z-index: 2;
+
   max-width: 900px;
-  margin: 0 auto 15px;
+
+  margin:
+    0
+    auto
+    13px;
 
   display: grid;
-  grid-template-columns:
-    1fr 1fr 1fr;
 
-  gap: 12px;
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 10px;
 }
 
-.info-card {
-  min-height: 62px;
-  padding: 10px 16px;
+.score-card {
+  padding:
+    10px
+    16px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
 
-  background: #fff;
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.88
+    );
 
-  border: 2px solid #252525;
-  border-radius: 12px;
+  border:
+    2px
+    solid
+    #252525;
+
+  border-radius: 11px;
 }
 
-.info-card span {
-  font-size: 0.68rem;
+.score-card span {
+  font-size: 0.58rem;
+
   font-weight: 900;
-  letter-spacing: 0.08em;
-  color: #777;
+
+  letter-spacing: 0.12em;
+
+  color: #77736c;
 }
 
-.info-card strong {
-  font-size: 1.25rem;
+.score-card strong {
+  font-size: 1.2rem;
 }
 
-.controls-card strong {
-  font-size: 0.9rem;
+.high-score-card {
+  background:
+    #fff4c9;
 }
 
-/* =========================
-   GAME CONTAINER
-========================= */
+/* =========================================================
+   GAME SHELL
+========================================================= */
+
+.cat-game-shell {
+  position: relative;
+  z-index: 2;
+
+  width:
+    min(
+      900px,
+      100%
+    );
+
+  margin:
+    0
+    auto;
+
+  overflow: hidden;
+
+  border:
+    3px
+    solid
+    #252525;
+
+  border-radius: 17px;
+
+  background: #252525;
+
+  box-shadow:
+    8px
+    8px
+    0
+    #252525;
+}
+
+/* =========================================================
+   TOP / BOTTOM BARS
+========================================================= */
+
+.game-topbar,
+.game-bottombar {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding:
+    8px
+    13px;
+
+  background:
+    #252525;
+
+  color: #f7f3ea;
+
+  font-size: 0.52rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.13em;
+}
+
+.game-topbar span:nth-child(2) {
+  color: #e8c26c;
+}
+
+.game-bottombar {
+  border-top:
+    1px
+    solid
+    rgba(
+      255,
+      255,
+      255,
+      0.12
+    );
+}
+
+.game-bottombar span {
+  opacity: 0.75;
+}
+
+/* =========================================================
+   GAME AREA
+========================================================= */
 
 .game-container {
   position: relative;
 
-  width: min(900px, 100%);
-  margin: 0 auto;
+  width: 100%;
 
   overflow: hidden;
 
-  background: #fff;
-
-  border: 3px solid #252525;
-  border-radius: 18px;
-
-  box-shadow: 9px 9px 0 #252525;
-
-  touch-action: none;
+  background: #f1e6c9;
 }
 
 .game-container canvas {
@@ -167,12 +400,140 @@
 
   cursor: pointer;
 
-  touch-action: none;
+  touch-action: manipulation;
+
+  image-rendering: pixelated;
 }
 
-/* =========================
+/* =========================================================
+   READY SCREEN
+========================================================= */
+
+.cat-ready {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+
+  width:
+    min(
+      390px,
+      78%
+    );
+
+  padding:
+    23px
+    25px;
+
+  text-align: center;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.92
+    );
+
+  border:
+    3px
+    solid
+    #252525;
+
+  border-radius: 15px;
+
+  box-shadow:
+    6px
+    6px
+    0
+    #252525;
+}
+
+.ready-badge {
+  display: inline-block;
+
+  margin-bottom: 8px;
+
+  padding:
+    5px
+    8px;
+
+  border-radius: 5px;
+
+  background: #252525;
+
+  color: white;
+
+  font-size: 0.55rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.14em;
+}
+
+.cat-ready h2 {
+  margin:
+    0;
+
+  font-size:
+    clamp(
+      1.5rem,
+      4vw,
+      2.3rem
+    );
+
+  line-height: 1;
+
+  letter-spacing: -0.04em;
+}
+
+.cat-ready p {
+  margin:
+    9px
+    0
+    13px;
+
+  color: #666;
+
+  font-size: 0.75rem;
+}
+
+.jump-hint {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 6px;
+}
+
+.jump-hint span {
+  padding:
+    6px
+    9px;
+
+  border:
+    2px
+    solid
+    #252525;
+
+  border-radius: 6px;
+
+  background: #fff4c9;
+
+  font-size: 0.55rem;
+
+  font-weight: 900;
+}
+
+/* =========================================================
    GAME OVER
-========================= */
+========================================================= */
 
 .game-over {
   position: absolute;
@@ -180,471 +541,506 @@
   top: 50%;
   left: 50%;
 
-  width: min(380px, 82%);
-
   transform:
-    translate(-50%, -50%);
+    translate(
+      -50%,
+      -50%
+    );
 
-  padding: 28px;
+  width:
+    min(
+      380px,
+      78%
+    );
 
-  background: white;
+  padding:
+    22px
+    25px;
 
-  border: 3px solid #252525;
-  border-radius: 18px;
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.96
+    );
+
+  border:
+    3px
+    solid
+    #252525;
+
+  border-radius: 16px;
 
   text-align: center;
 
-  box-shadow: 7px 7px 0 #252525;
+  box-shadow:
+    7px
+    7px
+    0
+    #252525;
 }
 
-.game-over-emoji {
-  font-size: 50px;
+.bonk-icon {
+  font-size: 38px;
+
+  line-height: 1;
+
   margin-bottom: 5px;
 }
 
 .game-over-label {
   margin: 0;
 
-  font-size: 0.7rem;
-  font-weight: 900;
-  letter-spacing: 0.18em;
+  font-size: 0.55rem;
 
-  color: #777;
+  font-weight: 900;
+
+  letter-spacing: 0.16em;
+
+  color: #a07652;
 }
 
 .game-over h2 {
-  margin: 4px 0 0;
+  margin:
+    5px
+    0
+    4px;
 
-  font-size: 3rem;
-  line-height: 1;
+  font-size:
+    clamp(
+      2rem,
+      5vw,
+      3rem
+    );
+
+  line-height: 0.9;
+
+  letter-spacing: -0.06em;
 }
 
-.game-over > p:not(.game-over-label) {
-  margin: 8px 0 20px;
+.game-over > p {
+  margin:
+    8px
+    0
+    15px;
+
   color: #666;
+
+  font-size: 0.8rem;
 }
 
-.game-over-stats {
+.final-run-score {
   display: grid;
-  grid-template-columns: 1fr 1fr;
 
-  gap: 10px;
+  grid-template-columns:
+    1fr
+    1fr;
 
-  margin-bottom: 20px;
+  gap: 8px;
+
+  margin-bottom: 12px;
 }
 
-.game-over-stats div {
-  padding: 10px;
+.final-run-score div {
+  padding:
+    9px;
 
-  border: 2px solid #252525;
-  border-radius: 10px;
+  border:
+    2px
+    solid
+    #252525;
+
+  border-radius: 8px;
+
+  background:
+    #f7f3ea;
 }
 
-.game-over-stats span {
+.final-run-score span {
   display: block;
 
-  font-size: 0.65rem;
+  font-size: 0.5rem;
+
   font-weight: 900;
+
+  letter-spacing: 0.1em;
 
   color: #777;
 }
 
-.game-over-stats strong {
+.final-run-score strong {
   display: block;
 
   margin-top: 3px;
 
-  font-size: 1.5rem;
+  font-size: 1.35rem;
+}
+
+.new-record {
+  margin:
+    0
+    0
+    12px;
+
+  padding:
+    6px
+    9px;
+
+  border:
+    2px
+    solid
+    #252525;
+
+  border-radius: 7px;
+
+  background: #ffd166;
+
+  font-size: 0.58rem;
+
+  font-weight: 950;
 }
 
 .game-over button {
   width: 100%;
 
-  padding: 13px 24px;
+  padding:
+    11px
+    20px;
 
-  border: 3px solid #252525;
+  border:
+    3px
+    solid
+    #252525;
+
   border-radius: 9px;
 
-  background: #252525;
+  background:
+    #252525;
+
   color: white;
 
   font-weight: 900;
-  font-size: 1rem;
 
   cursor: pointer;
 
   transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+    transform 0.15s ease;
 }
 
 .game-over button:hover {
-  transform: translateY(-2px);
-  box-shadow: 4px 4px 0 #777;
+  transform:
+    translateY(-2px);
 }
 
-/* =========================
-   INSTRUCTIONS
-========================= */
+.game-over button span {
+  margin-left: 8px;
 
-.cat-instructions {
-  max-width: 900px;
-
-  margin: 25px auto 0;
-
-  display: grid;
-  grid-template-columns:
-    repeat(3, 1fr);
-
-  gap: 12px;
+  font-size: 1rem;
 }
 
-.cat-instructions > div {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+/* =========================================================
+   MOBILE LANDSCAPE NOTICE
+========================================================= */
 
-  padding: 12px 15px;
-
-  background: rgba(255, 255, 255, 0.75);
-
-  border: 2px solid #252525;
-  border-radius: 12px;
-}
-
-.cat-instructions span {
-  font-size: 27px;
-}
-
-.cat-instructions p {
-  margin: 0;
-
-  font-size: 0.78rem;
-  line-height: 1.3;
-  color: #666;
-}
-
-.cat-instructions strong {
-  color: #252525;
-  font-size: 0.72rem;
-}
-
-/* =========================
-   LANDSCAPE WARNING
-========================= */
-
-.landscape-warning {
+.landscape-notice {
   display: none;
 }
 
-/* =========================
+/* =========================================================
    MOBILE
-========================= */
+========================================================= */
 
 @media (max-width: 700px) {
   .cat-run {
-    padding: 20px 12px 30px;
+    padding:
+      20px
+      13px
+      30px;
   }
 
   .cat-run-header {
-    gap: 12px;
-    margin-bottom: 18px;
+    gap: 10px;
+
+    margin-bottom: 19px;
   }
 
   .cat-title {
     gap: 10px;
   }
 
-  .cat-title-icon {
-    width: 48px;
-    height: 48px;
-
-    font-size: 26px;
+  .cat-title-art {
+    width: 50px;
+    height: 50px;
 
     border-width: 2px;
-    box-shadow: 3px 3px 0 #252525;
+
+    border-radius: 12px;
+
+    box-shadow:
+      3px
+      3px
+      0
+      #252525;
   }
 
-  .cat-run-header h1 {
-    font-size: 2rem;
+  .cat-title-art img {
+    width: 48px;
   }
 
-  .cat-run-header p:not(.eyebrow) {
-    font-size: 0.8rem;
+  .cat-title h1 {
+    font-size: 1.85rem;
   }
 
-  .back-button {
-    padding: 8px 11px;
-    font-size: 0.78rem;
-  }
-
-  .game-info {
-    grid-template-columns:
-      1fr 1fr;
-
-    gap: 8px;
-
-    margin-bottom: 10px;
-  }
-
-  .info-card {
-    min-height: 52px;
-    padding: 8px 10px;
-  }
-
-  .info-card span {
-    font-size: 0.58rem;
-  }
-
-  .info-card strong {
-    font-size: 1rem;
-  }
-
-  .controls-card {
-    grid-column: 1 / -1;
-  }
-
-  .controls-card strong {
-    font-size: 0.78rem;
-  }
-
-  .game-container {
-    border-radius: 13px;
-    box-shadow: 5px 5px 0 #252525;
-  }
-
-  .cat-instructions {
-    grid-template-columns: 1fr;
-
-    gap: 8px;
-
-    margin-top: 15px;
-  }
-
-  .cat-instructions > div {
-    padding: 9px 12px;
-  }
-}
-
-/* =========================
-   PHONE PORTRAIT WARNING
-========================= */
-
-@media (max-width: 700px) and (orientation: portrait) {
-  .landscape-warning {
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 9999;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 25px;
-
-    background: #252525;
-  }
-
-  .landscape-warning-card {
-    width: min(390px, 90vw);
-
-    padding: 30px 24px;
-
-    background: #f7f3ea;
-
-    border: 3px solid white;
-    border-radius: 20px;
-
-    text-align: center;
-
-    box-shadow: 8px 8px 0 white;
-  }
-
-  .rotate-icon {
-    font-size: 60px;
-    margin-bottom: 12px;
-  }
-
-  .landscape-warning-card h2 {
-    margin: 0;
-
-    font-size: 1.45rem;
-    line-height: 1.05;
-  }
-
-  .landscape-warning-card p {
-    margin: 12px 0 18px;
-
-    color: #666;
-
-    line-height: 1.4;
-  }
-
-  .landscape-warning-card span {
-    display: inline-block;
-
-    padding: 8px 12px;
-
-    border: 2px solid #252525;
-    border-radius: 8px;
-
-    background: white;
-
-    font-size: 0.8rem;
-    font-weight: 800;
-  }
-
-  .cat-run {
-    min-height: 100vh;
-  }
-}
-/* =========================
-   LANDSCAPE PHONE
-========================= */
-
-@media (max-width: 900px) and (orientation: landscape) {
-  .cat-run {
-    padding: 10px 18px 15px;
-  }
-
-  .cat-run-header {
-    margin-bottom: 7px;
-  }
-
-  .cat-title-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 22px;
-  }
-
-  .cat-run-header h1 {
-    font-size: 1.5rem;
-  }
-
-  .cat-run-header p:not(.eyebrow) {
-    font-size: 0.68rem;
-    margin-top: 2px;
-  }
-
-  .game-info {
-    margin-bottom: 6px;
-    gap: 6px;
-  }
-
-  .info-card {
-    min-height: 38px;
-    padding: 4px 9px;
-  }
-
-  .info-card span {
-    font-size: 0.55rem;
-  }
-
-  .info-card strong {
-    font-size: 0.9rem;
-  }
-
-  .controls-card strong {
+  .cat-title p:last-child {
     font-size: 0.7rem;
   }
 
-  /*
-   * SMALLER GAME ON LANDSCAPE PHONES
-   */
-
-  .game-container {
-    width: min(760px, 92vw);
-
-    /*
-     * The canvas is still 900x320 internally,
-     * but this makes it render smaller on short
-     * phone screens.
-     */
-    max-height: 58vh;
+  .cat-eyebrow {
+    font-size: 0.5rem;
   }
 
-  .game-container canvas {
-    width: 100%;
-    height: auto;
+  .back-button {
+    padding:
+      8px
+      10px;
+
+    font-size: 0.7rem;
   }
 
-  /*
-   * SMALLER GAME-OVER CARD
-   */
+  .scoreboard {
+    gap: 6px;
 
-  .game-over {
-    width: min(320px, 72%);
-    padding: 14px 18px;
+    margin-bottom: 9px;
+  }
 
+  .score-card {
+    padding:
+      8px
+      10px;
+  }
+
+  .score-card span {
+    font-size: 0.48rem;
+  }
+
+  .score-card strong {
+    font-size: 1rem;
+  }
+
+  .cat-game-shell {
     border-width: 2px;
+
     border-radius: 12px;
 
-    box-shadow: 4px 4px 0 #252525;
+    box-shadow:
+      5px
+      5px
+      0
+      #252525;
   }
 
-  .game-over-emoji {
-    font-size: 30px;
-    margin-bottom: 2px;
+  .game-topbar,
+  .game-bottombar {
+    padding:
+      6px
+      8px;
+
+    font-size: 0.42rem;
   }
 
-  .game-over-label {
-    font-size: 0.55rem;
+  .game-bottombar span:nth-child(2) {
+    display: none;
+  }
+
+  .cat-ready,
+  .game-over {
+    width: 76%;
+
+    padding:
+      15px
+      16px;
+
+    border-width: 2px;
+
+    border-radius: 11px;
+
+    box-shadow:
+      4px
+      4px
+      0
+      #252525;
+  }
+
+  .cat-ready h2 {
+    font-size: 1.4rem;
+  }
+
+  .cat-ready p {
+    margin:
+      7px
+      0
+      9px;
+
+    font-size: 0.62rem;
+  }
+
+  .jump-hint span {
+    padding:
+      5px
+      7px;
+
+    font-size: 0.45rem;
   }
 
   .game-over h2 {
     font-size: 2rem;
   }
 
-  .game-over > p:not(.game-over-label) {
-    margin: 4px 0 9px;
-    font-size: 0.7rem;
+  .game-over > p {
+    font-size: 0.65rem;
   }
 
-  .game-over-stats {
-    gap: 6px;
-    margin-bottom: 9px;
+  .bonk-icon {
+    font-size: 28px;
   }
 
-  .game-over-stats div {
-    padding: 5px;
-    border-width: 1px;
+  .final-run-score {
+    margin-bottom: 8px;
   }
 
-  .game-over-stats span {
-    font-size: 0.5rem;
+  .final-run-score div {
+    padding: 6px;
   }
 
-  .game-over-stats strong {
+  .final-run-score strong {
     font-size: 1rem;
   }
 
   .game-over button {
-    padding: 8px 14px;
-    font-size: 0.75rem;
-    border-width: 2px;
+    padding:
+      9px
+      15px;
+
+    font-size: 0.7rem;
   }
 
-  .cat-instructions {
-    margin-top: 7px;
-    gap: 6px;
+  /*
+   * MOBILE LANDSCAPE MESSAGE
+   */
+
+  .landscape-notice {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    max-width: 500px;
+
+    margin:
+      13px
+      auto
+      0;
+
+    padding:
+      9px
+      12px;
+
+    border:
+      2px
+      solid
+      #252525;
+
+    border-radius: 10px;
+
+    background:
+      rgba(
+        255,
+        244,
+        201,
+        0.9
+      );
+
+    box-shadow:
+      3px
+      3px
+      0
+      #252525;
   }
 
-  .cat-instructions > div {
-    padding: 5px 8px;
+  .phone-icon {
+    font-size: 23px;
   }
 
-  .cat-instructions span {
-    font-size: 18px;
+  .landscape-notice strong {
+    display: block;
+
+    font-size: 0.65rem;
   }
 
-  .cat-instructions p {
+  .landscape-notice p {
+    margin:
+      2px
+      0
+      0;
+
+    color: #666;
+
+    font-size: 0.58rem;
+
+    line-height: 1.3;
+  }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+  .cat-run {
+    padding:
+      16px
+      9px
+      25px;
+  }
+
+  .cat-title-art {
+    width: 43px;
+    height: 43px;
+  }
+
+  .cat-title-art img {
+    width: 42px;
+  }
+
+  .cat-title h1 {
+    font-size: 1.55rem;
+  }
+
+  .back-button {
+    padding:
+      7px
+      8px;
+
     font-size: 0.62rem;
   }
 
-  .cat-instructions strong {
-    font-size: 0.58rem;
+  .score-card {
+    padding:
+      7px
+      8px;
+  }
+
+  .game-topbar span:nth-child(2) {
+    display: none;
+  }
+
+  .cat-ready,
+  .game-over {
+    width: 79%;
+
+    padding:
+      12px;
   }
 }

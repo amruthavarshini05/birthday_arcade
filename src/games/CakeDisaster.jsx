@@ -11,14 +11,12 @@ const DECORATIONS = [
 ]
 
 const DECORATION_POSITIONS = [
-  // Top row
   { x: 55, y: 30 },
   { x: 90, y: 30 },
   { x: 130, y: 30 },
   { x: 170, y: 30 },
   { x: 205, y: 30 },
 
-  // Middle row
   { x: 45, y: 55 },
   { x: 80, y: 55 },
   { x: 115, y: 55 },
@@ -26,21 +24,21 @@ const DECORATION_POSITIONS = [
   { x: 185, y: 55 },
   { x: 220, y: 55 },
 
-  // Lower row
   { x: 55, y: 80 },
   { x: 90, y: 80 },
   { x: 130, y: 80 },
   { x: 170, y: 80 },
   { x: 205, y: 80 },
 
-  // Bottom row
   { x: 80, y: 105 },
   { x: 130, y: 105 },
   { x: 180, y: 105 },
 ]
 
 function generateTarget(round = 1) {
-  const positions = [...DECORATION_POSITIONS]
+  const positions = [
+    ...DECORATION_POSITIONS,
+  ]
 
   const decorationCount = Math.min(
     3 + Math.floor((round - 1) / 2),
@@ -49,20 +47,28 @@ function generateTarget(round = 1) {
 
   const target = []
 
-  for (let i = 0; i < decorationCount; i++) {
-    const positionIndex = Math.floor(
-      Math.random() * positions.length
-    )
+  for (
+    let i = 0;
+    i < decorationCount;
+    i++
+  ) {
+    const positionIndex =
+      Math.floor(
+        Math.random() *
+          positions.length
+      )
 
-    const position = positions.splice(
-      positionIndex,
-      1
-    )[0]
+    const position =
+      positions.splice(
+        positionIndex,
+        1
+      )[0]
 
     const type =
       DECORATIONS[
         Math.floor(
-          Math.random() * DECORATIONS.length
+          Math.random() *
+            DECORATIONS.length
         )
       ]
 
@@ -86,10 +92,13 @@ function CakeDisaster({ onBack }) {
   const [decorations, setDecorations] =
     useState([])
 
-  const [draggingDecoration, setDraggingDecoration] =
-    useState(null)
+  const [
+    draggingDecoration,
+    setDraggingDecoration,
+  ] = useState(null)
 
-  const [score, setScore] = useState(null)
+  const [score, setScore] =
+    useState(null)
 
   const [totalScore, setTotalScore] =
     useState(0)
@@ -106,13 +115,12 @@ function CakeDisaster({ onBack }) {
         : 0
     })
 
-  const [round, setRound] = useState(1)
+  const [round, setRound] =
+    useState(1)
 
   const [timeLeft, setTimeLeft] =
     useState(30)
 
-  // NEW:
-  // Prevent checking the same cake twice.
   const [hasChecked, setHasChecked] =
     useState(false)
 
@@ -123,7 +131,6 @@ function CakeDisaster({ onBack }) {
   useEffect(() => {
     if (
       !gameStarted ||
-      score !== null ||
       hasChecked
     ) {
       return
@@ -136,7 +143,8 @@ function CakeDisaster({ onBack }) {
 
     const timer = setTimeout(() => {
       setTimeLeft(
-        (current) => current - 1
+        (current) =>
+          current - 1
       )
     }, 1000)
 
@@ -145,7 +153,6 @@ function CakeDisaster({ onBack }) {
   }, [
     gameStarted,
     timeLeft,
-    score,
     hasChecked,
   ])
 
@@ -199,10 +206,12 @@ function CakeDisaster({ onBack }) {
       event.currentTarget.getBoundingClientRect()
 
     const x =
-      event.clientX - cake.left
+      event.clientX -
+      cake.left
 
     const y =
-      event.clientY - cake.top
+      event.clientY -
+      cake.top
 
     setDecorations(
       (current) => [
@@ -211,9 +220,12 @@ function CakeDisaster({ onBack }) {
           id:
             Date.now() +
             Math.random(),
+
           type:
             draggingDecoration.type,
+
           x,
+
           y,
         },
       ]
@@ -223,21 +235,28 @@ function CakeDisaster({ onBack }) {
   }
 
   /*
-   * START GAME
+   * START
    */
 
   function startGame() {
-    const newTarget =
-      generateTarget(1)
-
     setRound(1)
-    setTargetCake(newTarget)
+
+    setTargetCake(
+      generateTarget(1)
+    )
+
     setDecorations([])
+
     setScore(null)
+
     setTotalScore(0)
+
     setTimeLeft(30)
+
     setHasChecked(false)
+
     setDraggingDecoration(null)
+
     setGameStarted(true)
   }
 
@@ -249,12 +268,16 @@ function CakeDisaster({ onBack }) {
     const nextRound =
       round + 1
 
-    const newTarget =
-      generateTarget(nextRound)
-
     setRound(nextRound)
-    setTargetCake(newTarget)
+
+    setTargetCake(
+      generateTarget(
+        nextRound
+      )
+    )
+
     setDecorations([])
+
     setScore(null)
 
     setTimeLeft(
@@ -265,17 +288,15 @@ function CakeDisaster({ onBack }) {
     )
 
     setHasChecked(false)
+
     setDraggingDecoration(null)
   }
 
   /*
-   * CHECK CAKE
+   * CHECK
    */
 
   function checkCake() {
-    // IMPORTANT:
-    // Don't allow the same cake to be
-    // scored more than once.
     if (
       !targetCake ||
       hasChecked
@@ -297,7 +318,10 @@ function CakeDisaster({ onBack }) {
         let closestIndex = -1
 
         decorations.forEach(
-          (decoration, index) => {
+          (
+            decoration,
+            index
+          ) => {
             if (
               usedDecorations.has(
                 index
@@ -350,12 +374,10 @@ function CakeDisaster({ onBack }) {
           closestIndex
         )
 
-        // Correct decoration
         decorationPoints +=
           50 /
           targetCake.length
 
-        // Position accuracy
         if (
           closestDistance <= 15
         ) {
@@ -379,10 +401,6 @@ function CakeDisaster({ onBack }) {
         }
       }
     )
-
-    /*
-     * EXTRA DECORATIONS
-     */
 
     const extraDecorations =
       decorations.length -
@@ -410,10 +428,6 @@ function CakeDisaster({ onBack }) {
         finalScore
       )
 
-    /*
-     * MARK THIS CAKE AS CHECKED
-     */
-
     setHasChecked(true)
 
     setDraggingDecoration(null)
@@ -422,19 +436,11 @@ function CakeDisaster({ onBack }) {
       finalCakeScore
     )
 
-    /*
-     * UPDATE RUN SCORE
-     */
-
     setTotalScore(
       (currentTotal) => {
         const newTotal =
           currentTotal +
           finalCakeScore
-
-        /*
-         * UPDATE HIGH SCORE
-         */
 
         if (
           newTotal >
@@ -458,9 +464,23 @@ function CakeDisaster({ onBack }) {
   return (
     <main className="cake-disaster">
 
+      {/* BACKGROUND DECOR */}
+
+      <div className="cake-confetti cake-confetti-one">
+        ✦
+      </div>
+
+      <div className="cake-confetti cake-confetti-two">
+        🍓
+      </div>
+
+      <div className="cake-confetti cake-confetti-three">
+        ✿
+      </div>
+
       {/* HEADER */}
 
-      <div className="cake-disaster-header">
+      <header className="cake-disaster-header">
 
         <button
           className="back-button"
@@ -469,275 +489,443 @@ function CakeDisaster({ onBack }) {
           ← Arcade
         </button>
 
-        <div>
-          <h1>
-            🍰 Cake Disaster
-          </h1>
+        <div className="cake-title">
 
-          <p>
-            Let's make a cake. What could
-            possibly go wrong?
-          </p>
+          <span className="cake-title-icon">
+            🍰
+          </span>
+
+          <div>
+            <p className="cake-eyebrow">
+              BIRTHDAY BAKERY
+            </p>
+
+            <h1>
+              Cake Disaster
+            </h1>
+
+            <p>
+              Make it pretty. Or don't.
+              I'm not your mother.
+            </p>
+          </div>
+
         </div>
 
-      </div>
+      </header>
 
       <div className="cake-game">
 
-        {/* START SCREEN */}
+        {/* START */}
 
         {!gameStarted ? (
 
-          <div className="cake-start">
+          <section className="cake-start">
 
-            <div className="cake-preview">
-              🎂
+            <div className="cake-start-art">
+              <span className="start-cake">
+                🎂
+              </span>
+
+              <span className="floating-berry">
+                🍓
+              </span>
+
+              <span className="floating-star">
+                ✦
+              </span>
             </div>
+
+            <p className="section-label">
+              CAKE ORDER #001
+            </p>
 
             <h2>
               Ready to bake?
             </h2>
 
-            <p>
-              Recreate the target cake as
-              closely as you can.
+            <p className="start-copy">
+              A mysterious customer has
+              requested a very specific cake.
+              Recreate it before the timer
+              runs out.
             </p>
 
+            <div className="cake-rules">
+
+              <div>
+                <span>01</span>
+                <p>
+                  Copy the decorations
+                </p>
+              </div>
+
+              <div>
+                <span>02</span>
+                <p>
+                  Get their positions right
+                </p>
+              </div>
+
+              <div>
+                <span>03</span>
+                <p>
+                  Don't overdecorate
+                </p>
+              </div>
+
+            </div>
+
             <button
+              className="primary-cake-button"
               onClick={startGame}
             >
-              LET'S CAKE 🎂
+              LET'S CAKE
+              <span>🍰</span>
             </button>
 
-          </div>
+          </section>
 
         ) : (
 
-          <div className="cake-board">
+          <section className="cake-board">
 
-            {/* ROUND */}
+            {/* HUD */}
 
-            <div className="cake-status">
+            <div className="cake-hud">
 
-              <span>
-                ROUND {round}
-              </span>
+              <div className="cake-hud-item">
 
-              <span
-                className={
-                  timeLeft <= 5
-                    ? 'timer danger'
-                    : 'timer'
-                }
-              >
-                ⏱️ {timeLeft}s
-              </span>
-
-            </div>
-
-            {/* TARGET */}
-
-            <h2>
-              MAKE THIS CAKE
-            </h2>
-
-            <div className="target-cake">
-
-              <div className="target-cake-top"></div>
-
-              <div className="target-cake-body"></div>
-
-              {targetCake?.map(
-                (
-                  decoration,
-                  index
-                ) => (
-                  <span
-                    key={index}
-                    className="target-decoration"
-                    style={{
-                      left: `${decoration.x}px`,
-                      top: `${decoration.y}px`,
-                    }}
-                  >
-                    {decoration.type}
-                  </span>
-                )
-              )}
-
-            </div>
-
-            {/* PLAYER CAKE */}
-
-            <h2>
-              YOUR CAKE
-            </h2>
-
-            {/* DECORATION TRAY */}
-
-            <div className="decoration-tray">
-
-              {DECORATIONS.map(
-                (decoration) => (
-                  <button
-                    key={decoration}
-                    disabled={
-                      hasChecked
-                    }
-                    onPointerDown={() =>
-                      startDragging(
-                        decoration
-                      )
-                    }
-                  >
-                    {decoration}
-                  </button>
-                )
-              )}
-
-            </div>
-
-            {/* CAKE */}
-
-            <div
-              className="cake"
-              onPointerMove={
-                moveDragging
-              }
-              onPointerUp={
-                placeDecoration
-              }
-            >
-
-              {draggingDecoration && (
-                <span
-                  className="dragging-decoration"
-                  style={{
-                    left: `${draggingDecoration.x}px`,
-                    top: `${draggingDecoration.y}px`,
-                  }}
-                >
-                  {
-                    draggingDecoration.type
-                  }
+                <span>
+                  ROUND
                 </span>
-              )}
 
-              {decorations.map(
-                (decoration) => (
-                  <span
-                    key={decoration.id}
-                    className="placed-decoration"
-                    style={{
-                      left: `${decoration.x}px`,
-                      top: `${decoration.y}px`,
-                    }}
-                  >
-                    {decoration.type}
-                  </span>
-                )
-              )}
-
-              <div className="cake-top">
-
-                <div className="frosting">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
+                <strong>
+                  {String(round).padStart(
+                    2,
+                    '0'
+                  )}
+                </strong>
 
               </div>
 
-              <div className="cake-body">
+              <div className="cake-hud-item">
 
-                <div className="cake-layer"></div>
+                <span>
+                  RUN SCORE
+                </span>
 
-                <div className="cake-layer"></div>
+                <strong>
+                  {totalScore}
+                </strong>
+
+              </div>
+
+              <div
+                className={`cake-hud-item ${
+                  timeLeft <= 5
+                    ? 'timer-danger'
+                    : ''
+                }`}
+              >
+
+                <span>
+                  TIME
+                </span>
+
+                <strong>
+                  ⏱ {timeLeft}s
+                </strong>
 
               </div>
 
             </div>
 
-            <p>
-              {hasChecked
-                ? 'Cake checked! Time for the next one. 🍰'
-                : 'Drag decorations onto your cake!'}
-            </p>
+            {/* TARGET + PLAYER */}
 
-            {/* CHECK */}
+            <div className="cake-workspace">
 
-            <button
-              className="check-cake-button"
-              onClick={checkCake}
-              disabled={hasChecked}
-            >
-              {hasChecked
-                ? 'CAKE CHECKED ✓'
-                : 'CHECK CAKE 🎂'}
-            </button>
+              <div className="target-panel">
 
-            {/* SCORE */}
+                <div className="panel-heading">
 
-            {score !== null && (
+                  <div>
+                    <span className="panel-kicker">
+                      CUSTOMER ORDER
+                    </span>
 
-              <div className="cake-score">
+                    <h2>
+                      MAKE THIS CAKE
+                    </h2>
+                  </div>
 
-                <div className="score-board">
-
-                  <span>
-                    🏆 HIGH SCORE:{' '}
-                    {highScore}
-                  </span>
-
-                  <span>
-                    ⭐ RUN SCORE:{' '}
-                    {totalScore}
+                  <span className="order-stamp">
+                    COPY
                   </span>
 
                 </div>
 
-                <h2>
-                  CAKE SCORE:{' '}
-                  {score}/100
-                </h2>
+                <div className="target-cake">
 
-                <p>
-                  {score === 100
-                    ? 'PERFECT CAKE. 👑'
-                    : score >= 90
-                    ? 'Okayyyy pastry chef. 😌'
-                    : score >= 80
-                    ? 'Just Do It (Nike) 😎'
-                    : score >= 70
-                    ? 'Do you hate me?!'
-                    : score >= 60
-                    ? 'Uhhhh.... Ok?'
-                    : score >= 50
-                    ? 'Does my disappointment amuse you?'
-                    : score >= 40
-                    ? 'Questionable... but edible. 🤨'
-                    : score >= 30
-                    ? 'Okayyyy pastry chef. 😌'
-                    : score >= 20
-                    ? 'GET A GRIP BRO!!'
-                    : score >= 10
-                    ? "You're doing this on purpose aren't you? 😬"
-                    : score === 0
-                    ? 'What the hell happened here? 💀'
-                    : "It's like you won't even try. 😭"}
+                  <div className="target-cake-top" />
+
+                  <div className="target-cake-body" />
+
+                  {targetCake?.map(
+                    (
+                      decoration,
+                      index
+                    ) => (
+                      <span
+                        key={index}
+                        className="target-decoration"
+                        style={{
+                          left: `${decoration.x}px`,
+                          top: `${decoration.y}px`,
+                        }}
+                      >
+                        {
+                          decoration.type
+                        }
+                      </span>
+                    )
+                  )}
+
+                </div>
+
+                <p className="target-hint">
+                  Match the decorations
+                  and their positions.
+                </p>
+
+              </div>
+
+              <div className="player-panel">
+
+                <div className="panel-heading">
+
+                  <div>
+                    <span className="panel-kicker">
+                      YOUR MASTERPIECE
+                    </span>
+
+                    <h2>
+                      YOUR CAKE
+                    </h2>
+                  </div>
+
+                  <span className="decor-count">
+                    {decorations.length}
+                    {' '}
+                    DECOR
+                  </span>
+
+                </div>
+
+                {/* TRAY */}
+
+                <div className="decoration-station">
+
+                  <div className="station-label">
+                    DRAG TO DECORATE
+                  </div>
+
+                  <div className="decoration-tray">
+
+                    {DECORATIONS.map(
+                      (decoration) => (
+                        <button
+                          key={decoration}
+                          disabled={
+                            hasChecked
+                          }
+                          onPointerDown={() =>
+                            startDragging(
+                              decoration
+                            )
+                          }
+                        >
+                          {decoration}
+                        </button>
+                      )
+                    )}
+
+                  </div>
+
+                </div>
+
+                {/* CAKE */}
+
+                <div
+                  className={`cake ${
+                    hasChecked
+                      ? 'cake-locked'
+                      : ''
+                  }`}
+                  onPointerMove={
+                    moveDragging
+                  }
+                  onPointerUp={
+                    placeDecoration
+                  }
+                >
+
+                  {draggingDecoration && (
+                    <span
+                      className="dragging-decoration"
+                      style={{
+                        left: `${draggingDecoration.x}px`,
+                        top: `${draggingDecoration.y}px`,
+                      }}
+                    >
+                      {
+                        draggingDecoration.type
+                      }
+                    </span>
+                  )}
+
+                  {decorations.map(
+                    (decoration) => (
+                      <span
+                        key={
+                          decoration.id
+                        }
+                        className="placed-decoration"
+                        style={{
+                          left: `${decoration.x}px`,
+                          top: `${decoration.y}px`,
+                        }}
+                      >
+                        {
+                          decoration.type
+                        }
+                      </span>
+                    )
+                  )}
+
+                  <div className="cake-top">
+
+                    <div className="frosting">
+                      <span />
+                      <span />
+                      <span />
+                    </div>
+
+                  </div>
+
+                  <div className="cake-body">
+
+                    <div className="cake-layer" />
+                    <div className="cake-layer" />
+
+                  </div>
+
+                </div>
+
+                <p className="drag-hint">
+                  {hasChecked
+                    ? 'Cake locked! 🍰'
+                    : 'Drag your ingredients onto the cake'}
                 </p>
 
                 <button
+                  className="check-cake-button"
+                  onClick={checkCake}
+                  disabled={hasChecked}
+                >
+                  {hasChecked
+                    ? 'CAKE CHECKED ✓'
+                    : 'CHECK MY CAKE'}
+                </button>
+
+              </div>
+
+            </div>
+
+            {/* RESULT */}
+
+            {score !== null && (
+
+              <div className="cake-result">
+
+                <div className="result-left">
+
+                  <span className="result-label">
+                    INSPECTION COMPLETE
+                  </span>
+
+                  <h2>
+                    CAKE SCORE
+                  </h2>
+
+                  <div className="big-cake-score">
+                    {score}
+                    <span>/100</span>
+                  </div>
+
+                </div>
+
+                <div className="result-middle">
+
+                  <p>
+                    {score === 100
+                      ? 'PERFECT CAKE. 👑'
+                      : score >= 90
+                      ? 'Okayyyy pastry chef. 😌'
+                      : score >= 80
+                      ? 'Just Do It (Nike) 😎'
+                      : score >= 70
+                      ? 'Do you hate me?!'
+                      : score >= 60
+                      ? 'Uhhhh.... Ok?'
+                      : score >= 50
+                      ? 'Does my disappointment amuse you?'
+                      : score >= 40
+                      ? 'Questionable... but edible. 🤨'
+                      : score >= 30
+                      ? 'I mean, it looks like a cake. Barely.'
+                      : score >= 20
+                      ? 'GET A GRIP BRO!!'
+                      : score >= 10
+                      ? "You're doing this on purpose aren't you? 😬"
+                      : score === 0
+                      ? 'What the hell happened here? 💀'
+                      : "It's like you won't even try. 😭"}
+                  </p>
+
+                  <div className="result-stats">
+
+                    <span>
+                      🏆 HIGH SCORE
+                      <strong>
+                        {highScore}
+                      </strong>
+                    </span>
+
+                    <span>
+                      ⭐ RUN SCORE
+                      <strong>
+                        {totalScore}
+                      </strong>
+                    </span>
+
+                  </div>
+
+                </div>
+
+                <button
+                  className="next-cake-button"
                   onClick={nextCake}
                 >
-                  NEXT CAKE 🍰
+                  NEXT CAKE
+                  <span>→</span>
                 </button>
 
               </div>
 
             )}
 
-          </div>
+          </section>
 
         )}
 

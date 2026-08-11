@@ -14,9 +14,15 @@ import backgroundScene from '../assets/cat-run/background_bottom.png'
 import birdFly1 from '../assets/cat-run/bird_fly_1.png'
 import birdFly2 from '../assets/cat-run/bird_fly_2.png'
 
-const GAME_WIDTH = 900
-const GAME_HEIGHT = 320
-const GROUND_Y = 260
+const CACTUS_IMAGES = [
+  new Image(),
+  new Image(),
+  new Image(),
+]
+
+CACTUS_IMAGES[0].src = cactusTall
+CACTUS_IMAGES[1].src = cactusRound
+CACTUS_IMAGES[2].src = cactusSide
 
 const CAT_RUN_FRAMES = [
   catRun1,
@@ -35,36 +41,20 @@ const BIRD_FRAMES = [
   birdFly2,
 ]
 
-/*
- * PRELOAD IMAGES
- */
+const BIRD_IMAGES = [
+  new Image(),
+  new Image(),
+]
 
-const CAT_IMAGES = CAT_RUN_FRAMES.map(
-  (src) => {
-    const image = new Image()
-    image.src = src
-    return image
-  }
-)
-
-const CACTUS_IMAGES = CACTUS_VARIANTS.map(
-  (src) => {
-    const image = new Image()
-    image.src = src
-    return image
-  }
-)
-
-const BIRD_IMAGES = BIRD_FRAMES.map(
-  (src) => {
-    const image = new Image()
-    image.src = src
-    return image
-  }
-)
+BIRD_IMAGES[0].src = birdFly1
+BIRD_IMAGES[1].src = birdFly2
 
 const BACKGROUND_IMAGE = new Image()
 BACKGROUND_IMAGE.src = backgroundScene
+
+const GAME_WIDTH = 900
+const GAME_HEIGHT = 320
+const GROUND_Y = 260
 
 function CatRun({ onBack }) {
   const canvasRef = useRef(null)
@@ -109,19 +99,9 @@ function CatRun({ onBack }) {
     gameOver: false,
   })
 
-  const gameStateRef =
-    useRef('ready')
-
-  useEffect(() => {
-    gameStateRef.current =
-      gameState
-  }, [gameState])
-
   useEffect(() => {
     const canvas =
       canvasRef.current
-
-    if (!canvas) return
 
     const ctx =
       canvas.getContext('2d')
@@ -130,10 +110,6 @@ function CatRun({ onBack }) {
 
     const game =
       gameRef.current
-
-    /*
-     * RESET
-     */
 
     function resetGame() {
       game.cat = {
@@ -160,24 +136,15 @@ function CatRun({ onBack }) {
       setScore(0)
     }
 
-    /*
-     * JUMP
-     */
-
     function jump() {
       if (
         !game.cat.jumping &&
         !game.gameOver
       ) {
         game.cat.velocityY = -15
-
         game.cat.jumping = true
       }
     }
-
-    /*
-     * CREATE OBSTACLE
-     */
 
     function createObstacle(
       type = 'cactus'
@@ -210,10 +177,6 @@ function CatRun({ onBack }) {
       })
     }
 
-    /*
-     * COLLISION
-     */
-
     function checkCollision(
       cat,
       obstacle
@@ -228,14 +191,17 @@ function CatRun({ onBack }) {
           obstacle.x +
             obstacle.width -
             obstaclePaddingX &&
+
         cat.x +
           cat.width -
           catPaddingX >
           obstacle.x +
             obstaclePaddingX &&
+
         cat.y + catPaddingY <
           obstacle.y +
             obstacle.height &&
+
         cat.y +
           cat.height -
           catPaddingY >
@@ -243,23 +209,20 @@ function CatRun({ onBack }) {
       )
     }
 
-    /*
-     * DRAW CAT
-     */
-
     function drawCat() {
       const frameIndex =
         Math.floor(
           game.frame / 8
         ) %
-        CAT_IMAGES.length
+        CAT_RUN_FRAMES.length
 
       const catImage =
-        CAT_IMAGES[frameIndex]
+        new Image()
 
-      if (!catImage.complete) {
-        return
-      }
+      catImage.src =
+        CAT_RUN_FRAMES[
+          frameIndex
+        ]
 
       ctx.drawImage(
         catImage,
@@ -270,16 +233,11 @@ function CatRun({ onBack }) {
       )
     }
 
-    /*
-     * DRAW OBSTACLE
-     */
-
     function drawObstacle(
       obstacle
     ) {
       if (
-        obstacle.type ===
-        'bird'
+        obstacle.type === 'bird'
       ) {
         const birdFrame =
           Math.floor(
@@ -288,9 +246,13 @@ function CatRun({ onBack }) {
           BIRD_IMAGES.length
 
         const birdImage =
-          BIRD_IMAGES[birdFrame]
+          BIRD_IMAGES[
+            birdFrame
+          ]
 
-        if (!birdImage.complete) {
+        if (
+          !birdImage.complete
+        ) {
           return
         }
 
@@ -310,7 +272,9 @@ function CatRun({ onBack }) {
           obstacle.variant ?? 0
         ]
 
-      if (!cactusImage.complete) {
+      if (
+        !cactusImage.complete
+      ) {
         return
       }
 
@@ -322,33 +286,6 @@ function CatRun({ onBack }) {
         70
       )
     }
-
-    /*
-     * BACKGROUND
-     */
-
-    function drawBackground() {
-      if (
-        !BACKGROUND_IMAGE.complete
-      ) {
-        return
-      }
-
-      ctx.imageSmoothingEnabled =
-        false
-
-      ctx.drawImage(
-        BACKGROUND_IMAGE,
-        0,
-        0,
-        GAME_WIDTH,
-        GAME_HEIGHT
-      )
-    }
-
-    /*
-     * GROUND LINE
-     */
 
     function drawGround() {
       ctx.beginPath()
@@ -370,10 +307,6 @@ function CatRun({ onBack }) {
 
       ctx.stroke()
     }
-
-    /*
-     * GAME UPDATE
-     */
 
     function update() {
       if (game.gameOver) {
@@ -403,12 +336,11 @@ function CatRun({ onBack }) {
 
         game.cat.velocityY = 0
 
-        game.cat.jumping =
-          false
+        game.cat.jumping = false
       }
 
       /*
-       * OBSTACLE GENERATION
+       * CREATE OBSTACLES
        */
 
       if (
@@ -418,38 +350,22 @@ function CatRun({ onBack }) {
         const random =
           Math.random()
 
-        /*
-         * NORMAL CACTUS
-         */
-
         if (random < 0.65) {
           createObstacle(
             'cactus'
           )
-        }
-
-        /*
-         * BIRD
-         */
-
-        else if (
+        } else if (
           random < 0.9
         ) {
           createObstacle(
             'bird'
           )
-        }
-
-        /*
-         * DOUBLE CACTUS
-         */
-
-        else {
+        } else {
           createObstacle(
             'cactus'
           )
 
-          const secondVariant =
+          const secondCactusVariant =
             Math.floor(
               Math.random() *
                 CACTUS_VARIANTS.length
@@ -464,13 +380,9 @@ function CatRun({ onBack }) {
             width: 45,
             height: 60,
             variant:
-              secondVariant,
+              secondCactusVariant,
           })
         }
-
-        /*
-         * GAP BETWEEN OBSTACLES
-         */
 
         const minimumGap =
           Math.max(
@@ -512,7 +424,7 @@ function CatRun({ onBack }) {
       )
 
       /*
-       * REMOVE OFF-SCREEN
+       * REMOVE OFFSCREEN
        */
 
       game.obstacles =
@@ -537,7 +449,8 @@ function CatRun({ onBack }) {
             obstacle
           )
         ) {
-          game.gameOver = true
+          game.gameOver =
+            true
 
           setGameState(
             'gameover'
@@ -554,7 +467,7 @@ function CatRun({ onBack }) {
           ) {
             localStorage.setItem(
               'catRunHighScore',
-              finalScore
+              finalScore.toString()
             )
 
             setHighScore(
@@ -592,9 +505,24 @@ function CatRun({ onBack }) {
         )
     }
 
-    /*
-     * DRAW
-     */
+    function drawBackground() {
+      if (
+        !BACKGROUND_IMAGE.complete
+      ) {
+        return
+      }
+
+      ctx.imageSmoothingEnabled =
+        false
+
+      ctx.drawImage(
+        BACKGROUND_IMAGE,
+        0,
+        0,
+        GAME_WIDTH,
+        GAME_HEIGHT
+      )
+    }
 
     function draw() {
       ctx.clearRect(
@@ -613,68 +541,19 @@ function CatRun({ onBack }) {
       )
 
       /*
-       * START MESSAGE
+       * READY STATE MESSAGE
+       * is handled by the HTML overlay
        */
-
-      if (
-        gameStateRef.current ===
-        'ready'
-      ) {
-        ctx.font =
-          'bold 24px Arial'
-
-        ctx.textAlign =
-          'center'
-
-        ctx.fillStyle =
-          '#252525'
-
-        ctx.fillText(
-          'PRESS SPACE OR TAP TO JUMP',
-          GAME_WIDTH / 2,
-          100
-        )
-
-        ctx.textAlign =
-          'left'
-      }
     }
-
-    /*
-     * LOOP
-     */
 
     function loop() {
       update()
-
       draw()
 
       animationId =
         requestAnimationFrame(
           loop
         )
-    }
-
-    /*
-     * INPUT
-     */
-
-    function startPlaying() {
-      if (
-        gameStateRef.current ===
-        'ready'
-      ) {
-        resetGame()
-
-        setGameState(
-          'playing'
-        )
-
-        gameStateRef.current =
-          'playing'
-      }
-
-      jump()
     }
 
     function handleKeyDown(
@@ -687,45 +566,62 @@ function CatRun({ onBack }) {
         event.preventDefault()
 
         if (
-          gameStateRef.current ===
+          gameState ===
           'gameover'
         ) {
           setGameState(
             'ready'
           )
 
-          gameStateRef.current =
-            'ready'
-
           return
         }
 
-        startPlaying()
+        if (
+          gameState ===
+          'ready'
+        ) {
+          resetGame()
+
+          setGameState(
+            'playing'
+          )
+        }
+
+        jump()
       }
 
       if (
         event.code ===
         'ArrowUp'
       ) {
-        event.preventDefault()
+        if (
+          gameState ===
+          'ready'
+        ) {
+          resetGame()
 
-        startPlaying()
+          setGameState(
+            'playing'
+          )
+        }
+
+        jump()
       }
     }
 
-    function handlePointerDown(
-      event
-    ) {
-      event.preventDefault()
-
+    function handleClick() {
       if (
-        gameStateRef.current ===
-        'gameover'
+        gameState ===
+        'ready'
       ) {
-        return
+        resetGame()
+
+        setGameState(
+          'playing'
+        )
       }
 
-      startPlaying()
+      jump()
     }
 
     window.addEventListener(
@@ -734,8 +630,8 @@ function CatRun({ onBack }) {
     )
 
     canvas.addEventListener(
-      'pointerdown',
-      handlePointerDown
+      'click',
+      handleClick
     )
 
     loop()
@@ -751,55 +647,39 @@ function CatRun({ onBack }) {
       )
 
       canvas.removeEventListener(
-        'pointerdown',
-        handlePointerDown
+        'click',
+        handleClick
       )
     }
-  }, [gameState, highScore])
-
-  /*
-   * RESTART
-   */
+  }, [
+    gameState,
+    highScore,
+  ])
 
   function restart() {
-    setGameState(
-      'ready'
-    )
+    setGameState('ready')
   }
 
   return (
     <main className="cat-run">
 
-      {/* MOBILE LANDSCAPE WARNING */}
+      {/* FLOATING DECOR */}
 
-      <div className="landscape-warning">
+      <div className="cat-decor cat-decor-one">
+        ✦
+      </div>
 
-        <div className="landscape-warning-card">
+      <div className="cat-decor cat-decor-two">
+        🌵
+      </div>
 
-          <div className="rotate-icon">
-            📱↪️
-          </div>
-
-          <h2>
-            TURN YOUR PHONE SIDEWAYS
-          </h2>
-
-          <p>
-            Cat Run is best played in
-            landscape mode.
-          </p>
-
-          <span>
-            🔄 Rotate your phone
-          </span>
-
-        </div>
-
+      <div className="cat-decor cat-decor-three">
+        • • •
       </div>
 
       {/* HEADER */}
 
-      <div className="cat-run-header">
+      <header className="cat-run-header">
 
         <button
           className="back-button"
@@ -810,17 +690,20 @@ function CatRun({ onBack }) {
 
         <div className="cat-title">
 
-          <div className="cat-title-icon">
-            🐈
+          <div className="cat-title-art">
+            <img
+              src={catRun1}
+              alt="Cat Run cat"
+            />
           </div>
 
           <div>
-            <p className="eyebrow">
-              BIRTHDAY ARCADE
+            <p className="cat-eyebrow">
+              ENDLESS RUNNER
             </p>
 
             <h1>
-              CAT RUN
+              Cat Run
             </h1>
 
             <p>
@@ -831,161 +714,200 @@ function CatRun({ onBack }) {
 
         </div>
 
-      </div>
+      </header>
 
-      {/* GAME INFO */}
+      {/* SCORE HUD */}
 
-      <div className="game-info">
+      <div className="scoreboard">
 
-        <div className="info-card">
-
+        <div className="score-card">
           <span>
-            SCORE
+            CURRENT RUN
           </span>
 
           <strong>
             {score}
           </strong>
-
         </div>
 
-        <div className="info-card">
-
+        <div className="score-card high-score-card">
           <span>
-            HIGH SCORE
+            🏆 HIGH SCORE
           </span>
 
           <strong>
-            🏆 {highScore}
+            {highScore}
           </strong>
-
-        </div>
-
-        <div className="info-card controls-card">
-
-          <span>
-            CONTROLS
-          </span>
-
-          <strong>
-            SPACE / TAP
-          </strong>
-
         </div>
 
       </div>
 
       {/* GAME */}
 
-      <div className="game-container">
+      <section className="cat-game-shell">
 
-        <canvas
-          ref={canvasRef}
-          width={GAME_WIDTH}
-          height={GAME_HEIGHT}
-        />
+        <div className="game-topbar">
 
-        {/* GAME OVER */}
-
-        {gameState ===
-          'gameover' && (
-
-          <div className="game-over">
-
-            <div className="game-over-emoji">
-              💥🐈
-            </div>
-
-            <p className="game-over-label">
-              GAME OVER
-            </p>
-
-            <h2>
-              BONK.
-            </h2>
-
-            <p>
-              The cat has met the cactus.
-            </p>
-
-            <div className="game-over-stats">
-
-              <div>
-                <span>
-                  SCORE
-                </span>
-
-                <strong>
-                  {score}
-                </strong>
-              </div>
-
-              <div>
-                <span>
-                  HIGH SCORE
-                </span>
-
-                <strong>
-                  {highScore}
-                </strong>
-              </div>
-
-            </div>
-
-            <button
-              onClick={restart}
-            >
-              TRY AGAIN 🐈
-            </button>
-
-          </div>
-        )}
-
-      </div>
-
-      {/* INSTRUCTIONS */}
-
-      <div className="cat-instructions">
-
-        <div>
           <span>
-            🐈
+            CAT.EXE
           </span>
 
-          <p>
-            <strong>
-              TAP / SPACE
-            </strong>
-            <br />
-            Jump over obstacles
-          </p>
+          <span>
+            SPACE / TAP TO JUMP
+          </span>
+
+          <span>
+            DANGER ↑
+          </span>
+
         </div>
 
-        <div>
-          <span>
-            🌵
-          </span>
+        <div className="game-container">
 
-          <p>
-            <strong>
-              CACTUS
-            </strong>
-            <br />
-            Don't touch it
-          </p>
+          <canvas
+            ref={canvasRef}
+            width={GAME_WIDTH}
+            height={GAME_HEIGHT}
+          />
+
+          {/* READY */}
+
+          {gameState ===
+            'ready' && (
+
+            <div className="cat-ready">
+
+              <div className="ready-badge">
+                READY?
+              </div>
+
+              <h2>
+                RUN, KITTY. RUN.
+              </h2>
+
+              <p>
+                Press SPACE,
+                ↑, or tap the game
+                to jump.
+              </p>
+
+              <div className="jump-hint">
+                <span>
+                  SPACE
+                </span>
+
+                <span>
+                  / TAP
+                </span>
+              </div>
+
+            </div>
+          )}
+
+          {/* GAME OVER */}
+
+          {gameState ===
+            'gameover' && (
+
+            <div className="game-over">
+
+              <div className="bonk-icon">
+                💥
+              </div>
+
+              <p className="game-over-label">
+                RUN TERMINATED
+              </p>
+
+              <h2>
+                BONK.
+              </h2>
+
+              <p>
+                The cat has met
+                the cactus.
+              </p>
+
+              <div className="final-run-score">
+
+                <div>
+                  <span>
+                    SCORE
+                  </span>
+
+                  <strong>
+                    {score}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>
+                    BEST
+                  </span>
+
+                  <strong>
+                    {highScore}
+                  </strong>
+                </div>
+
+              </div>
+
+              {score >=
+                highScore &&
+                score > 0 && (
+                  <div className="new-record">
+                    🎉 NEW HIGH SCORE
+                  </div>
+                )}
+
+              <button
+                onClick={restart}
+              >
+                TRY AGAIN
+                <span>
+                  ↻
+                </span>
+              </button>
+
+            </div>
+          )}
+
         </div>
 
-        <div>
+        <div className="game-bottombar">
+
           <span>
-            🐦
+            🐈 KEEP RUNNING
           </span>
 
+          <span>
+            🌵 AVOID CACTI
+          </span>
+
+          <span>
+            🐦 WATCH THE SKY
+          </span>
+
+        </div>
+
+      </section>
+
+      {/* MOBILE LANDSCAPE NOTICE */}
+
+      <div className="landscape-notice">
+
+        <span className="phone-icon">
+          📱
+        </span>
+
+        <div>
+          <strong>
+            Playing on your phone?
+          </strong>
+
           <p>
-            <strong>
-              BIRD
-            </strong>
-            <br />
-            Yep. That's also bad.
+            Turn it sideways for
+            the best Cat Run experience.
           </p>
         </div>
 

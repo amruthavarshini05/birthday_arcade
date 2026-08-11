@@ -1,54 +1,116 @@
-import { useEffect, useRef, useState } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
+
 import './BrainCell.css'
 
 const FALLING_OBJECTS = [
-  { type: '🧠', points: 10 },
-  { type: '☕', points: 15 },
-  { type: '📱', points: -5 },
-  { type: '🧟‍♀️', points: -10 },
-  { type: '📖', points: -15 },
+  {
+    type: '🧠',
+    points: 10,
+    good: true,
+  },
+  {
+    type: '☕',
+    points: 15,
+    good: true,
+  },
+  {
+    type: '📱',
+    points: -5,
+    good: false,
+  },
+  {
+    type: '🧟‍♀️',
+    points: -10,
+    good: false,
+  },
+  {
+    type: '📖',
+    points: -15,
+    good: false,
+  },
 ]
 
 const GAME_DURATION = 60
 
 function BrainCell({ onBack }) {
-  const [gameStarted, setGameStarted] = useState(false)
-  const [gameOver, setGameOver] = useState(false)
+  const [
+    gameStarted,
+    setGameStarted,
+  ] = useState(false)
 
-  const [playerX, setPlayerX] = useState(50)
-  const [fallingObjects, setFallingObjects] = useState([])
+  const [gameOver, setGameOver] =
+    useState(false)
 
-  const [score, setScore] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(GAME_DURATION)
+  const [playerX, setPlayerX] =
+    useState(50)
 
-  const [highScore, setHighScore] = useState(() => {
-    const savedScore = localStorage.getItem(
-      'brainCellHighScore'
-    )
+  const [
+    fallingObjects,
+    setFallingObjects,
+  ] = useState([])
 
-    return savedScore ? Number(savedScore) : 0
+  const [score, setScore] =
+    useState(0)
+
+  const [
+    timeLeft,
+    setTimeLeft,
+  ] = useState(GAME_DURATION)
+
+  const [
+    scorePopups,
+    setScorePopups,
+  ] = useState([])
+
+  const [
+    highScore,
+    setHighScore,
+  ] = useState(() => {
+    const saved =
+      localStorage.getItem(
+        'brainCellHighScore'
+      )
+
+    return saved
+      ? Number(saved)
+      : 0
   })
 
-  const [scorePopups, setScorePopups] = useState([])
+  const playerXRef =
+    useRef(50)
 
-  const playerXRef = useRef(50)
-  const scoreRef = useRef(0)
-  const highScoreRef = useRef(highScore)
+  const scoreRef =
+    useRef(0)
 
-  const objectsRef = useRef([])
+  const highScoreRef =
+    useRef(highScore)
 
-  const lastTimeRef = useRef(null)
-  const elapsedRef = useRef(0)
-  const spawnAccumulatorRef = useRef(0)
+  const objectsRef =
+    useRef([])
 
-  const movementRef = useRef(null)
+  const movementRef =
+    useRef(null)
+
+  const lastTimeRef =
+    useRef(null)
+
+  const elapsedRef =
+    useRef(0)
+
+  const spawnAccumulatorRef =
+    useRef(0)
 
   useEffect(() => {
-    highScoreRef.current = highScore
+    highScoreRef.current =
+      highScore
   }, [highScore])
 
   /*
-   * KEYBOARD CONTROLS
+   * KEYBOARD
    */
 
   useEffect(() => {
@@ -56,36 +118,54 @@ function BrainCell({ onBack }) {
 
     function handleKeyDown(event) {
       if (
-        event.key === 'ArrowLeft' ||
-        event.key.toLowerCase() === 'a'
+        event.key ===
+          'ArrowLeft' ||
+        event.key.toLowerCase() ===
+          'a'
       ) {
-        movementRef.current = 'left'
+        movementRef.current =
+          'left'
       }
 
       if (
-        event.key === 'ArrowRight' ||
-        event.key.toLowerCase() === 'd'
+        event.key ===
+          'ArrowRight' ||
+        event.key.toLowerCase() ===
+          'd'
       ) {
-        movementRef.current = 'right'
+        movementRef.current =
+          'right'
       }
     }
 
     function handleKeyUp(event) {
       if (
-        event.key === 'ArrowLeft' ||
-        event.key.toLowerCase() === 'a'
+        event.key ===
+          'ArrowLeft' ||
+        event.key.toLowerCase() ===
+          'a'
       ) {
-        if (movementRef.current === 'left') {
-          movementRef.current = null
+        if (
+          movementRef.current ===
+          'left'
+        ) {
+          movementRef.current =
+            null
         }
       }
 
       if (
-        event.key === 'ArrowRight' ||
-        event.key.toLowerCase() === 'd'
+        event.key ===
+          'ArrowRight' ||
+        event.key.toLowerCase() ===
+          'd'
       ) {
-        if (movementRef.current === 'right') {
-          movementRef.current = null
+        if (
+          movementRef.current ===
+          'right'
+        ) {
+          movementRef.current =
+            null
         }
       }
     }
@@ -114,47 +194,68 @@ function BrainCell({ onBack }) {
   }, [gameStarted])
 
   /*
-   * MAIN GAME LOOP
+   * GAME LOOP
    */
 
   useEffect(() => {
     if (!gameStarted) return
 
-    lastTimeRef.current = performance.now()
+    lastTimeRef.current =
+      performance.now()
+
     elapsedRef.current = 0
-    spawnAccumulatorRef.current = 0
 
-    const gameLoop = (currentTime) => {
+    spawnAccumulatorRef.current =
+      0
+
+    const gameLoop = (
+      currentTime
+    ) => {
+      if (
+        !lastTimeRef.current
+      ) {
+        lastTimeRef.current =
+          currentTime
+      }
+
       const delta =
-        currentTime - lastTimeRef.current
+        currentTime -
+        lastTimeRef.current
 
-      lastTimeRef.current = currentTime
+      lastTimeRef.current =
+        currentTime
 
-      elapsedRef.current += delta
+      elapsedRef.current +=
+        delta
 
       const elapsedSeconds =
-        elapsedRef.current / 1000
+        elapsedRef.current /
+        1000
 
       /*
        * TIMER
        */
 
-      const remainingTime = Math.max(
-        0,
-        Math.ceil(
-          GAME_DURATION -
-            elapsedSeconds
+      const remaining =
+        Math.max(
+          0,
+          Math.ceil(
+            GAME_DURATION -
+              elapsedSeconds
+          )
         )
-      )
 
-      setTimeLeft(remainingTime)
+      setTimeLeft(
+        remaining
+      )
 
       /*
        * GAME OVER
        */
 
       if (
-        elapsedSeconds >= GAME_DURATION
+        elapsedSeconds >=
+        GAME_DURATION
       ) {
         setGameStarted(false)
         setGameOver(true)
@@ -162,7 +263,9 @@ function BrainCell({ onBack }) {
         setFallingObjects([])
 
         objectsRef.current = []
-        movementRef.current = null
+
+        movementRef.current =
+          null
 
         return
       }
@@ -174,68 +277,85 @@ function BrainCell({ onBack }) {
       let spawnRate = 1200
       let fallSpeed = 1.5
 
-      if (elapsedSeconds >= 15) {
+      if (
+        elapsedSeconds >= 15
+      ) {
         spawnRate = 1000
         fallSpeed = 2
       }
 
-      if (elapsedSeconds >= 30) {
+      if (
+        elapsedSeconds >= 30
+      ) {
         spawnRate = 800
         fallSpeed = 2.5
       }
 
-      if (elapsedSeconds >= 45) {
+      if (
+        elapsedSeconds >= 45
+      ) {
         spawnRate = 600
         fallSpeed = 3
       }
 
       /*
-       * PLAYER MOVEMENT
+       * MOVEMENT
+       *
+       * This is now part of the
+       * same animation loop.
        */
 
-      if (movementRef.current) {
-        setPlayerX((current) => {
-          let next = current
+      if (
+        movementRef.current
+      ) {
+        const movementAmount =
+          0.38 *
+          (delta / 16.67)
 
-          if (
-            movementRef.current === 'left'
-          ) {
-            next = Math.max(
-              8,
-              current -
-                0.35 *
-                  (delta / 16.67)
-            )
-          }
+        let nextX =
+          playerXRef.current
 
-          if (
-            movementRef.current === 'right'
-          ) {
-            next = Math.min(
-              92,
-              current +
-                0.35 *
-                  (delta / 16.67)
-            )
-          }
+        if (
+          movementRef.current ===
+          'left'
+        ) {
+          nextX = Math.max(
+            8,
+            nextX -
+              movementAmount
+          )
+        }
 
-          playerXRef.current = next
+        if (
+          movementRef.current ===
+          'right'
+        ) {
+          nextX = Math.min(
+            92,
+            nextX +
+              movementAmount
+          )
+        }
 
-          return next
-        })
+        playerXRef.current =
+          nextX
+
+        setPlayerX(nextX)
       }
 
       /*
-       * SPAWN OBJECTS
+       * SPAWN
        */
 
-      spawnAccumulatorRef.current += delta
+      spawnAccumulatorRef.current +=
+        delta
 
       if (
         spawnAccumulatorRef.current >=
         spawnRate
       ) {
-        spawnAccumulatorRef.current = 0
+        spawnAccumulatorRef.current =
+          0
 
         const object =
           FALLING_OBJECTS[
@@ -250,12 +370,18 @@ function BrainCell({ onBack }) {
             Date.now() +
             Math.random(),
 
-          type: object.type,
+          type:
+            object.type,
 
-          points: object.points,
+          points:
+            object.points,
+
+          good:
+            object.good,
 
           x:
-            Math.random() * 84 +
+            Math.random() *
+              84 +
             8,
 
           y: -5,
@@ -263,7 +389,7 @@ function BrainCell({ onBack }) {
       }
 
       /*
-       * MOVE + CATCH OBJECTS
+       * MOVE + CATCH
        */
 
       const nextObjects = []
@@ -275,22 +401,18 @@ function BrainCell({ onBack }) {
             fallSpeed *
               (delta / 50)
 
-          /*
-           * CATCH
-           */
-
           if (
             nextY >= 88 &&
             nextY <= 96
           ) {
-            const horizontalDistance =
+            const distance =
               Math.abs(
                 object.x -
                   playerXRef.current
               )
 
             if (
-              horizontalDistance <= 8
+              distance <= 8
             ) {
               scoreRef.current +=
                 object.points
@@ -300,7 +422,7 @@ function BrainCell({ onBack }) {
               )
 
               /*
-               * SCORE POPUP
+               * POPUP
                */
 
               const popup = {
@@ -314,6 +436,9 @@ function BrainCell({ onBack }) {
 
                 points:
                   object.points,
+
+                good:
+                  object.good,
               }
 
               setScorePopups(
@@ -359,11 +484,9 @@ function BrainCell({ onBack }) {
             }
           }
 
-          /*
-           * KEEP OBJECT
-           */
-
-          if (nextY < 105) {
+          if (
+            nextY < 105
+          ) {
             nextObjects.push({
               ...object,
               y: nextY,
@@ -395,7 +518,8 @@ function BrainCell({ onBack }) {
         animationFrame
       )
 
-      movementRef.current = null
+      movementRef.current =
+        null
     }
   }, [gameStarted])
 
@@ -403,17 +527,20 @@ function BrainCell({ onBack }) {
    * MOBILE CONTROLS
    */
 
-  function startMoving(direction) {
+  function startMoving(
+    direction
+  ) {
     movementRef.current =
       direction
   }
 
   function stopMoving() {
-    movementRef.current = null
+    movementRef.current =
+      null
   }
 
   /*
-   * START GAME
+   * START
    */
 
   function startGame() {
@@ -428,26 +555,46 @@ function BrainCell({ onBack }) {
 
     setScorePopups([])
 
-    lastTimeRef.current = null
     elapsedRef.current = 0
-    spawnAccumulatorRef.current = 0
 
-    movementRef.current = null
+    spawnAccumulatorRef.current =
+      0
+
+    lastTimeRef.current =
+      null
+
+    movementRef.current =
+      null
 
     setTimeLeft(
       GAME_DURATION
     )
 
     setGameOver(false)
+
     setGameStarted(true)
   }
 
   return (
     <main className="brain-cell">
 
+      {/* DECOR */}
+
+      <div className="brain-bg brain-bg-one">
+        ✦
+      </div>
+
+      <div className="brain-bg brain-bg-two">
+        ⚡
+      </div>
+
+      <div className="brain-bg brain-bg-three">
+        +
+      </div>
+
       {/* HEADER */}
 
-      <div className="brain-cell-header">
+      <header className="brain-cell-header">
 
         <button
           className="back-button"
@@ -456,102 +603,233 @@ function BrainCell({ onBack }) {
           ← Arcade
         </button>
 
-        <div>
-          <h1>🧠 Brain Cell</h1>
+        <div className="brain-title">
 
-          <p>
-            Catch what little remains.
-          </p>
+          <span className="brain-title-icon">
+            🧠
+          </span>
+
+          <div>
+            <p className="brain-eyebrow">
+              COGNITIVE SURVIVAL
+            </p>
+
+            <h1>
+              Brain Cell
+            </h1>
+
+            <p>
+              There is one left.
+              Please don't lose it.
+            </p>
+          </div>
+
         </div>
 
-      </div>
+      </header>
 
-      {/* START SCREEN */}
+      {/* START */}
 
       {!gameStarted &&
         !gameOver && (
 
-          <div className="brain-start">
+        <section className="brain-start">
 
-            <div className="brain-preview">
+          <div className="brain-hero">
+
+            <div className="brain-big">
               🧠
             </div>
 
-            <h2>
-              Protect the brain cell!
-            </h2>
-
-            <p>
-              Catch the good stuff.
-              Avoid the questionable stuff.
-            </p>
-
-            <div className="brain-points">
-
-              <h3>POINTS</h3>
-
-              <div>
-                <span>🧠 Brain</span>
-                <strong>+10</strong>
-              </div>
-
-              <div>
-                <span>☕ Coffee</span>
-                <strong>+15</strong>
-              </div>
-
-              <div>
-                <span>📱 Phone</span>
-                <strong>-5</strong>
-              </div>
-
-              <div>
-                <span>
-                  🧟‍♀️ Dead Brain Cell
-                </span>
-
-                <strong>-10</strong>
-              </div>
-
-              <div>
-                <span>📖 Book</span>
-                <strong>-15</strong>
-              </div>
-
+            <div className="brain-spark spark-one">
+              ⚡
             </div>
 
-            <button
-              onClick={startGame}
-            >
-              SAVE THE BRAIN 🧠
-            </button>
+            <div className="brain-spark spark-two">
+              ✦
+            </div>
 
           </div>
-        )}
+
+          <p className="brain-label">
+            EMERGENCY PROTOCOL
+          </p>
+
+          <h2>
+            SAVE THE LAST BRAIN CELL
+          </h2>
+
+          <p className="brain-intro">
+            Good things fall from the sky.
+            Bad things also fall from the sky.
+            Unfortunately, nobody labelled them.
+          </p>
+
+          <div className="brain-points">
+
+            <div className="points-title">
+              <span>
+                WHAT TO CATCH
+              </span>
+
+              <span>
+                POINTS
+              </span>
+            </div>
+
+            <div className="point-row good">
+              <span>
+                🧠 Brain
+              </span>
+
+              <strong>
+                +10
+              </strong>
+            </div>
+
+            <div className="point-row good">
+              <span>
+                ☕ Coffee
+              </span>
+
+              <strong>
+                +15
+              </strong>
+            </div>
+
+            <div className="point-row bad">
+              <span>
+                📱 Phone
+              </span>
+
+              <strong>
+                −5
+              </strong>
+            </div>
+
+            <div className="point-row bad">
+              <span>
+                🧟‍♀️ Dead Brain Cell
+              </span>
+
+              <strong>
+                −10
+              </strong>
+            </div>
+
+            <div className="point-row bad">
+              <span>
+                📖 Book
+              </span>
+
+              <strong>
+                −15
+              </strong>
+            </div>
+
+          </div>
+
+          <div className="brain-start-stats">
+
+            <span>
+              ⏱ 60 SECONDS
+            </span>
+
+            <span>
+              🏆 HIGH SCORE {highScore}
+            </span>
+
+          </div>
+
+          <button
+            className="brain-start-button"
+            onClick={startGame}
+          >
+            SAVE THE BRAIN
+            <span>🧠</span>
+          </button>
+
+        </section>
+      )}
 
       {/* GAME OVER */}
 
       {!gameStarted &&
         gameOver && (
 
-          <div className="brain-game-over">
+        <section className="brain-game-over">
 
-            <div className="game-over-icon">
-              🧠💀
-            </div>
+          <div className="brain-dead">
+            🧠💥
+          </div>
 
-            <h2>
-              BRAIN CELL DEPLETED!
-            </h2>
+          <p className="brain-label">
+            SYSTEM FAILURE
+          </p>
 
-            <p>
-              Time's up.
-            </p>
+          <h2>
+            BRAIN CELL DEPLETED
+          </h2>
 
-            <div className="final-score">
+          <p>
+            Sixty seconds of questionable
+            decision-making have passed.
+          </p>
 
+          <div className="final-score-card">
+
+            <div>
               <span>
                 FINAL SCORE
+              </span>
+
+              <strong>
+                {score}
+              </strong>
+            </div>
+
+            <div>
+              <span>
+                🏆 HIGH SCORE
+              </span>
+
+              <strong>
+                {highScore}
+              </strong>
+            </div>
+
+          </div>
+
+          {score >= highScore &&
+            score > 0 && (
+              <div className="new-high-score">
+                🎉 NEW HIGH SCORE 🎉
+              </div>
+            )}
+
+          <button
+            className="brain-start-button"
+            onClick={startGame}
+          >
+            TRY AGAIN
+            <span>🧠</span>
+          </button>
+
+        </section>
+      )}
+
+      {/* GAME */}
+
+      {gameStarted && (
+
+        <section className="brain-game">
+
+          <div className="brain-hud">
+
+            <div className="brain-hud-score">
+
+              <span>
+                SCORE
               </span>
 
               <strong>
@@ -560,10 +838,28 @@ function BrainCell({ onBack }) {
 
             </div>
 
-            <div className="final-high-score">
+            <div className="brain-hud-center">
 
               <span>
-                🏆 HIGH SCORE
+                TIME
+              </span>
+
+              <strong
+                className={
+                  timeLeft <= 10
+                    ? 'time-warning'
+                    : ''
+                }
+              >
+                {timeLeft}
+              </strong>
+
+            </div>
+
+            <div className="brain-hud-high">
+
+              <span>
+                HIGH SCORE
               </span>
 
               <strong>
@@ -572,91 +868,77 @@ function BrainCell({ onBack }) {
 
             </div>
 
-            {score >= highScore &&
-              score > 0 && (
-                <h3 className="new-high-score">
-                  🎉 NEW HIGH SCORE! 🎉
-                </h3>
+          </div>
+
+          <div className="brain-game-shell">
+
+            <div className="brain-game-label">
+              <span>
+                CATCH THE GOOD STUFF
+              </span>
+
+              <span>
+                AVOID THE REST
+              </span>
+            </div>
+
+            <div className="brain-play-area">
+
+              <div className="brain-grid" />
+
+              {fallingObjects.map(
+                (object) => (
+                  <span
+                    key={object.id}
+                    className={`falling-object ${
+                      object.good
+                        ? 'good-object'
+                        : 'bad-object'
+                    }`}
+                    style={{
+                      left: `${object.x}%`,
+                      top: `${object.y}%`,
+                    }}
+                  >
+                    {object.type}
+                  </span>
+                )
               )}
 
-            <button
-              onClick={startGame}
-            >
-              PLAY AGAIN 🧠
-            </button>
+              {scorePopups.map(
+                (popup) => (
+                  <span
+                    key={popup.id}
+                    className={`score-popup ${
+                      popup.good
+                        ? 'positive'
+                        : 'negative'
+                    }`}
+                    style={{
+                      left: `${popup.x}%`,
+                      top: `${popup.y}%`,
+                    }}
+                  >
+                    {popup.points > 0
+                      ? `+${popup.points}`
+                      : popup.points}
+                  </span>
+                )
+              )}
 
-          </div>
-        )}
-
-      {/* GAME */}
-
-      {gameStarted && (
-
-        <div className="brain-game">
-
-          <div className="brain-score-board">
-
-            <span>
-              🧠 SCORE: {score}
-            </span>
-
-            <span>
-              🏆 HIGH SCORE: {highScore}
-            </span>
-
-            <span>
-              ⏱️ {timeLeft}s
-            </span>
-
-          </div>
-
-          <div className="brain-play-area">
-
-            {fallingObjects.map(
-              (object) => (
-                <span
-                  key={object.id}
-                  className="falling-object"
-                  style={{
-                    left: `${object.x}%`,
-                    top: `${object.y}%`,
-                  }}
-                >
-                  {object.type}
+              <div
+                className="brain-player"
+                style={{
+                  left: `${playerX}%`,
+                }}
+              >
+                <span>
+                  👧
                 </span>
-              )
-            )}
 
-            {/* SCORE POPUPS */}
+                <div className="player-glow" />
+              </div>
 
-            {scorePopups.map(
-              (popup) => (
-                <span
-                  key={popup.id}
-                  className={`score-popup ${
-                    popup.points > 0
-                      ? 'positive'
-                      : 'negative'
-                  }`}
-                  style={{
-                    left: `${popup.x}%`,
-                    top: `${popup.y}%`,
-                  }}
-                >
-                  {popup.points > 0
-                    ? `+${popup.points}`
-                    : popup.points}
-                </span>
-              )
-            )}
-
-            <div
-              className="brain-player"
-              style={{
-                left: `${playerX}%`,
-              }}
-            >
-              👧
             </div>
 
           </div>
@@ -677,8 +959,12 @@ function BrainCell({ onBack }) {
                 stopMoving
               }
             >
-              ◀
+              ←
             </button>
+
+            <div className="control-hint">
+              HOLD TO MOVE
+            </div>
 
             <button
               onPointerDown={() =>
@@ -694,12 +980,12 @@ function BrainCell({ onBack }) {
                 stopMoving
               }
             >
-              ▶
+              →
             </button>
 
           </div>
 
-        </div>
+        </section>
       )}
 
     </main>
