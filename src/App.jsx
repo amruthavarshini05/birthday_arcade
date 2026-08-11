@@ -75,7 +75,6 @@ function App() {
           <br />
           Zero productivity.
           <br />
-          <strong>Maximum birthday nonsense.</strong>
         </p>
 
         <div className="coin-message">

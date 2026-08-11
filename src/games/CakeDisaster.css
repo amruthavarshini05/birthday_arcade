@@ -1,29 +1,1545 @@
+/* =========================================================
+   CAKE DISASTER
+   ========================================================= */
+
+.cake-disaster {
+  position: relative;
+
+  min-height: 100vh;
+  padding: 35px 30px 60px;
+
+  overflow-x: hidden;
+
+  background:
+    radial-gradient(
+      circle at 10% 15%,
+      rgba(255, 214, 231, 0.7),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(255, 224, 186, 0.6),
+      transparent 25%
+    ),
+    #fff8f0;
+
+  color: #252525;
+}
+
+
+/* =========================================================
+   FLOATING BACKGROUND DECOR
+   ========================================================= */
+
+.cake-confetti {
+  position: fixed;
+
+  z-index: 0;
+
+  pointer-events: none;
+
+  user-select: none;
+
+  opacity: 0.55;
+}
+
+.cake-confetti-one {
+  top: 15%;
+  left: 5%;
+
+  font-size: 35px;
+
+  transform: rotate(-15deg);
+}
+
+.cake-confetti-two {
+  top: 65%;
+  right: 6%;
+
+  font-size: 30px;
+
+  transform: rotate(12deg);
+}
+
+.cake-confetti-three {
+  bottom: 10%;
+  left: 10%;
+
+  font-size: 32px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.cake-disaster-header {
+  position: relative;
+  z-index: 2;
+
+  max-width: 1100px;
+
+  margin: 0 auto 35px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 20px;
+}
+
+.cake-title {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+}
+
+.cake-title-icon {
+  width: 65px;
+  height: 65px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  font-size: 38px;
+
+  background: #ffd6e7;
+
+  border: 3px solid #252525;
+  border-radius: 18px;
+
+  box-shadow: 5px 5px 0 #252525;
+
+  transform: rotate(-3deg);
+}
+
+.cake-eyebrow {
+  margin: 0 0 4px;
+
+  font-size: 0.65rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.18em;
+
+  color: #b35b78;
+}
+
+.cake-disaster-header h1 {
+  margin: 0;
+
+  font-size: clamp(
+    2rem,
+    5vw,
+    3.5rem
+  );
+
+  line-height: 0.95;
+
+  letter-spacing: -0.04em;
+}
+
+.cake-disaster-header p:not(.cake-eyebrow) {
+  margin: 7px 0 0;
+
+  color: #777;
+
+  font-size: 0.95rem;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.back-button {
+  padding: 10px 16px;
+
+  border: 2px solid #252525;
+  border-radius: 10px;
+
+  background: white;
+  color: #252525;
+
+  cursor: pointer;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.back-button:hover {
+  transform: translate(-2px, -2px);
+
+  box-shadow: 3px 3px 0 #252525;
+}
+
+.back-button:active {
+  transform: translate(0, 0);
+
+  box-shadow: none;
+}
+
+
+/* =========================================================
+   GAME WRAPPER
+   ========================================================= */
+
+.cake-game {
+  position: relative;
+  z-index: 1;
+
+  max-width: 1100px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   START SCREEN
+   ========================================================= */
+
+.cake-start {
+  max-width: 620px;
+
+  margin: 30px auto 0;
+
+  padding: 45px 35px;
+
+  text-align: center;
+
+  background: white;
+
+  border: 3px solid #252525;
+  border-radius: 24px;
+
+  box-shadow:
+    8px 8px 0 #252525;
+}
+
+.cake-start-art {
+  position: relative;
+
+  width: 180px;
+  height: 145px;
+
+  margin: 0 auto 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.start-cake {
+  font-size: 100px;
+
+  line-height: 1;
+
+  filter:
+    drop-shadow(
+      5px
+      6px
+      0
+      rgba(37, 37, 37, 0.18)
+    );
+
+  animation:
+    cake-bob 2.5s ease-in-out infinite;
+}
+
+.floating-berry {
+  position: absolute;
+
+  top: 20px;
+  right: 10px;
+
+  font-size: 30px;
+
+  animation:
+    float-berry 2.2s ease-in-out infinite;
+}
+
+.floating-star {
+  position: absolute;
+
+  top: 5px;
+  left: 10px;
+
+  font-size: 28px;
+
+  animation:
+    float-star 2s ease-in-out infinite;
+}
+
+@keyframes cake-bob {
+  0%,
+  100% {
+    transform: translateY(0)
+      rotate(-2deg);
+  }
+
+  50% {
+    transform: translateY(-7px)
+      rotate(2deg);
+  }
+}
+
+@keyframes float-berry {
+  0%,
+  100% {
+    transform: translate(
+      0,
+      0
+    ) rotate(0deg);
+  }
+
+  50% {
+    transform: translate(
+      3px,
+      -7px
+    ) rotate(8deg);
+  }
+}
+
+@keyframes float-star {
+  0%,
+  100% {
+    transform:
+      translateY(0)
+      rotate(0deg);
+
+    opacity: 0.7;
+  }
+
+  50% {
+    transform:
+      translateY(-6px)
+      rotate(20deg);
+
+    opacity: 1;
+  }
+}
+
+.section-label {
+  margin: 5px 0 10px;
+
+  font-size: 0.65rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.2em;
+
+  color: #b35b78;
+}
+
+.cake-start h2 {
+  margin: 0;
+
+  font-size: 2.2rem;
+
+  letter-spacing: -0.04em;
+}
+
+.start-copy {
+  max-width: 500px;
+
+  margin: 15px auto 25px;
+
+  color: #666;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   START RULES
+   ========================================================= */
+
+.cake-rules {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 10px;
+
+  margin: 25px 0;
+}
+
+.cake-rules > div {
+  padding: 14px 10px;
+
+  background: #fff8f0;
+
+  border: 2px solid #252525;
+  border-radius: 10px;
+}
+
+.cake-rules span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  font-size: 0.65rem;
+
+  font-weight: 900;
+
+  color: #b35b78;
+}
+
+.cake-rules p {
+  margin: 0;
+
+  font-size: 0.75rem;
+
+  font-weight: 700;
+
+  line-height: 1.3;
+}
+
+
+/* =========================================================
+   START BUTTON
+   ========================================================= */
+
+.primary-cake-button {
+  padding: 14px 25px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border: 3px solid #252525;
+  border-radius: 11px;
+
+  background: #252525;
+  color: white;
+
+  font-weight: 900;
+  font-size: 0.9rem;
+
+  cursor: pointer;
+
+  box-shadow: 5px 5px 0 #e99ab4;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.primary-cake-button:hover {
+  transform:
+    translate(-2px, -2px);
+
+  box-shadow:
+    7px 7px 0 #e99ab4;
+}
+
+.primary-cake-button:active {
+  transform:
+    translate(2px, 2px);
+
+  box-shadow:
+    2px 2px 0 #e99ab4;
+}
+
+
+/* =========================================================
+   GAME BOARD
+   ========================================================= */
+
+.cake-board {
+  width: 100%;
+}
+
+
+/* =========================================================
+   HUD
+   ========================================================= */
+
+.cake-hud {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 12px;
+
+  margin-bottom: 20px;
+}
+
+.cake-hud-item {
+  padding: 11px 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: white;
+
+  border: 2px solid #252525;
+  border-radius: 10px;
+
+  box-shadow: 3px 3px 0 #252525;
+}
+
+.cake-hud-item span {
+  font-size: 0.6rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.12em;
+
+  color: #777;
+}
+
+.cake-hud-item strong {
+  font-size: 1rem;
+}
+
+.cake-hud-item.timer-danger {
+  background: #ffe0e5;
+
+  animation:
+    timer-pulse 0.8s
+    ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+
+/* =========================================================
+   WORKSPACE
+   ========================================================= */
+
+.cake-workspace {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 20px;
+
+  align-items: start;
+}
+
+
+/* =========================================================
+   PANELS
+   ========================================================= */
+
+.target-panel,
+.player-panel {
+  padding: 22px;
+
+  background: white;
+
+  border: 3px solid #252525;
+  border-radius: 18px;
+
+  box-shadow: 6px 6px 0 #252525;
+}
+
+.panel-heading {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-bottom: 15px;
+}
+
+.panel-kicker {
+  display: block;
+
+  margin-bottom: 4px;
+
+  font-size: 0.6rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.16em;
+
+  color: #b35b78;
+}
+
+.panel-heading h2 {
+  margin: 0;
+
+  font-size: 1.35rem;
+
+  letter-spacing: -0.03em;
+}
+
+.order-stamp,
+.decor-count {
+  padding: 5px 8px;
+
+  border: 2px solid #252525;
+  border-radius: 6px;
+
+  background: #fff3c9;
+
+  font-size: 0.55rem;
+
+  font-weight: 900;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   TARGET CAKE
+   ========================================================= */
+
+.target-cake {
+  position: relative;
+
+  width: 260px;
+  height: 150px;
+
+  margin: 20px auto;
+
+  border: 2px dashed #8b6972;
+  border-radius: 14px;
+
+  background:
+    radial-gradient(
+      circle,
+      #fffdf9,
+      #fff5ef
+    );
+
+  overflow: hidden;
+}
+
+.target-cake-top {
+  position: absolute;
+
+  top: 30px;
+  left: 20px;
+
+  width: 220px;
+  height: 52px;
+
+  border: 3px solid #5b3a42;
+  border-radius: 50%;
+
+  background: #ffd6e7;
+}
+
+.target-cake-body {
+  position: absolute;
+
+  top: 55px;
+  left: 20px;
+
+  width: 220px;
+  height: 75px;
+
+  border: 3px solid #5b3a42;
+  border-top: none;
+
+  border-radius:
+    0 0 15px 15px;
+
+  background: #f3a6b8;
+}
+
+.target-decoration {
+  position: absolute;
+
+  z-index: 5;
+
+  font-size: 25px;
+
+  line-height: 1;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+
+  pointer-events: none;
+}
+
+.target-hint {
+  margin: 0;
+
+  text-align: center;
+
+  color: #777;
+
+  font-size: 0.7rem;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   DECORATION STATION
+   ========================================================= */
+
+.decoration-station {
+  margin-bottom: 5px;
+}
+
+.station-label {
+  margin-bottom: 8px;
+
+  text-align: center;
+
+  font-size: 0.58rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.12em;
+
+  color: #888;
+}
+
+.decoration-tray {
+  display: flex;
+
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-bottom: 10px;
+}
+
+.decoration-tray button {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #252525;
+  border-radius: 9px;
+
+  background: white;
+
+  font-size: 25px;
+
+  cursor: grab;
+
+  touch-action: none;
+
+  user-select: none;
+  -webkit-user-select: none;
+
+  transition:
+    transform 0.12s ease,
+    background 0.12s ease;
+}
+
+.decoration-tray button:hover {
+  transform:
+    translateY(-3px);
+
+  background: #fff8f0;
+}
+
+.decoration-tray button:active {
+  cursor: grabbing;
+
+  transform:
+    scale(0.94);
+}
+
+.decoration-tray button:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   PLAYER CAKE
+   ========================================================= */
+
+.cake {
+  position: relative;
+
+  width: 260px;
+  height: 150px;
+
+  margin: 18px auto 8px;
+
+  touch-action: none;
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cake-top {
+  position: absolute;
+
+  top: 30px;
+  left: 20px;
+
+  width: 220px;
+  height: 55px;
+
+  border-radius: 50%;
+
+  background: #ffd6e7;
+
+  border: 4px solid #5b3a42;
+}
+
+.frosting {
+  position: absolute;
+
+  left: 0;
+  bottom: -10px;
+
+  width: 100%;
+  height: 25px;
+}
+
+.frosting span {
+  position: absolute;
+
+  width: 35px;
+  height: 25px;
+
+  background: #ffd6e7;
+
+  border-radius:
+    0 0 50% 50%;
+}
+
+.frosting span:nth-child(1) {
+  left: 45px;
+}
+
+.frosting span:nth-child(2) {
+  left: 95px;
+}
+
+.frosting span:nth-child(3) {
+  left: 145px;
+}
+
+.cake-body {
+  position: absolute;
+
+  top: 55px;
+  left: 20px;
+
+  width: 220px;
+  height: 75px;
+
+  background: #f3a6b8;
+
+  border: 4px solid #5b3a42;
+
+  border-top: none;
+
+  border-radius:
+    0 0 18px 18px;
+}
+
+.cake-layer {
+  height: 34px;
+
+  border-bottom:
+    3px solid #d9829b;
+}
+
+.cake-layer:last-child {
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   PLACED DECORATIONS
+   ========================================================= */
+
+.placed-decoration {
+  position: absolute;
+
+  z-index: 20;
+
+  font-size: 26px;
+
+  line-height: 1;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+
+  pointer-events: none;
+
+  user-select: none;
+}
+
+
+/* =========================================================
+   DRAGGING DECORATION
+   ========================================================= */
+
+/*
+   IMPORTANT:
+   This is FIXED rather than absolute.
+
+   The topping starts in the tray and needs to follow
+   the pointer while travelling OUTSIDE the cake.
+*/
+
 .dragging-decoration {
   position: fixed;
 
-  z-index: 9999;
+  z-index: 99999;
 
   font-size: 32px;
 
   line-height: 1;
 
-  transform: translate(-50%, -50%);
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
 
   pointer-events: none;
 
   opacity: 0.85;
+
+  user-select: none;
 
   filter:
     drop-shadow(
       2px
       3px
       2px
-      rgba(0, 0, 0, 0.2)
+      rgba(
+        0,
+        0,
+        0,
+        0.2
+      )
     );
 }
 
-.decoration-tray button {
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
+
+/* =========================================================
+   LOCKED CAKE
+   ========================================================= */
+
+.cake-locked {
+  opacity: 0.85;
+
+  filter:
+    saturate(0.85);
+}
+
+
+/* =========================================================
+   DRAG HINT
+   ========================================================= */
+
+.drag-hint {
+  min-height: 18px;
+
+  margin: 5px 0 12px;
+
+  text-align: center;
+
+  color: #777;
+
+  font-size: 0.7rem;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   CHECK BUTTON
+   ========================================================= */
+
+.check-cake-button {
+  width: 100%;
+
+  padding: 12px 18px;
+
+  border: 3px solid #252525;
+  border-radius: 10px;
+
+  background: #252525;
+  color: white;
+
+  font-size: 0.8rem;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.check-cake-button:hover:not(:disabled) {
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 4px 0 #e99ab4;
+}
+
+.check-cake-button:active:not(:disabled) {
+  transform:
+    translateY(1px);
+
+  box-shadow: none;
+}
+
+.check-cake-button:disabled {
+  background: #d8d8d8;
+
+  border-color: #aaa;
+
+  color: #777;
+
+  cursor: not-allowed;
+
+  box-shadow: none;
+}
+
+
+/* =========================================================
+   RESULT
+   ========================================================= */
+
+.cake-result {
+  margin-top: 22px;
+
+  padding: 22px;
+
+  display: grid;
+
+  grid-template-columns:
+    0.8fr 1.5fr auto;
+
+  align-items: center;
+
+  gap: 25px;
+
+  background: #252525;
+
+  color: white;
+
+  border-radius: 18px;
+
+  box-shadow:
+    6px 6px 0 #e99ab4;
+}
+
+.result-label {
+  display: block;
+
+  margin-bottom: 4px;
+
+  font-size: 0.55rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.14em;
+
+  color: #ffc6d9;
+}
+
+.result-left h2 {
+  margin: 0;
+
+  font-size: 1rem;
+}
+
+.big-cake-score {
+  margin-top: 3px;
+
+  font-size: 3rem;
+
+  font-weight: 900;
+
+  line-height: 1;
+}
+
+.big-cake-score span {
+  font-size: 1rem;
+
+  color: #aaa;
+}
+
+.result-middle p {
+  margin: 0 0 12px;
+
+  font-size: 1rem;
+
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+.result-stats {
+  display: flex;
+
+  gap: 15px;
+}
+
+.result-stats span {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  font-size: 0.58rem;
+
+  font-weight: 700;
+
+  color: #aaa;
+}
+
+.result-stats strong {
+  color: white;
+
+  font-size: 0.75rem;
+}
+
+.next-cake-button {
+  padding: 12px 16px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  border: 2px solid white;
+  border-radius: 9px;
+
+  background: white;
+  color: #252525;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition:
+    transform 0.15s ease;
+}
+
+.next-cake-button:hover {
+  transform:
+    translateY(-2px);
+}
+
+.next-cake-button span {
+  font-size: 1.2rem;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+  .cake-disaster {
+    padding:
+      25px
+      20px
+      50px;
+  }
+
+  .cake-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .target-panel,
+  .player-panel {
+    max-width: 500px;
+
+    width: 100%;
+
+    margin: 0 auto;
+  }
+
+  .cake-result {
+    grid-template-columns: 1fr;
+
+    text-align: center;
+
+    gap: 15px;
+  }
+
+  .result-stats {
+    justify-content: center;
+  }
+
+  .next-cake-button {
+    justify-content: center;
+
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .cake-disaster {
+    padding:
+      18px
+      12px
+      40px;
+  }
+
+  .cake-disaster-header {
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+  }
+
+  .cake-title {
+    gap: 10px;
+  }
+
+  .cake-title-icon {
+    width: 48px;
+    height: 48px;
+
+    font-size: 28px;
+
+    border-width: 2px;
+
+    box-shadow:
+      3px 3px 0 #252525;
+  }
+
+  .cake-eyebrow {
+    font-size: 0.5rem;
+  }
+
+  .cake-disaster-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .cake-disaster-header p:not(.cake-eyebrow) {
+    font-size: 0.72rem;
+  }
+
+  .back-button {
+    padding: 8px 10px;
+
+    font-size: 0.7rem;
+
+    border-width: 2px;
+  }
+
+
+  /* START */
+
+  .cake-start {
+    margin-top: 10px;
+
+    padding:
+      30px
+      18px;
+
+    border-width: 2px;
+
+    border-radius: 18px;
+
+    box-shadow:
+      5px 5px 0 #252525;
+  }
+
+  .cake-start-art {
+    width: 145px;
+    height: 120px;
+  }
+
+  .start-cake {
+    font-size: 78px;
+  }
+
+  .floating-berry {
+    font-size: 23px;
+
+    right: 0;
+  }
+
+  .floating-star {
+    font-size: 21px;
+
+    left: 0;
+  }
+
+  .cake-start h2 {
+    font-size: 1.8rem;
+  }
+
+  .start-copy {
+    font-size: 0.8rem;
+
+    line-height: 1.5;
+  }
+
+  .cake-rules {
+    grid-template-columns: 1fr;
+
+    gap: 7px;
+
+    margin: 20px 0;
+  }
+
+  .cake-rules > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 9px 12px;
+
+    text-align: left;
+  }
+
+  .cake-rules span {
+    margin: 0;
+
+    min-width: 20px;
+  }
+
+  .cake-rules p {
+    font-size: 0.7rem;
+  }
+
+
+  /* HUD */
+
+  .cake-hud {
+    gap: 6px;
+
+    margin-bottom: 12px;
+  }
+
+  .cake-hud-item {
+    padding: 8px 7px;
+
+    flex-direction: column;
+
+    gap: 2px;
+
+    box-shadow:
+      2px 2px 0 #252525;
+  }
+
+  .cake-hud-item span {
+    font-size: 0.45rem;
+  }
+
+  .cake-hud-item strong {
+    font-size: 0.8rem;
+  }
+
+
+  /* PANELS */
+
+  .target-panel,
+  .player-panel {
+    padding: 15px;
+
+    border-width: 2px;
+
+    border-radius: 14px;
+
+    box-shadow:
+      4px 4px 0 #252525;
+  }
+
+  .panel-heading h2 {
+    font-size: 1.05rem;
+  }
+
+  .panel-kicker {
+    font-size: 0.48rem;
+  }
+
+  .order-stamp,
+  .decor-count {
+    font-size: 0.45rem;
+
+    padding: 4px 6px;
+  }
+
+
+  /* CAKES */
+
+  .target-cake,
+  .cake {
+    transform:
+      scale(
+        0.88
+      );
+
+    transform-origin:
+      center top;
+
+    margin-bottom:
+      -10px;
+  }
+
+  .target-hint {
+    font-size: 0.6rem;
+  }
+
+
+  /* TRAY */
+
+  .decoration-tray {
+    gap: 6px;
+  }
+
+  .decoration-tray button {
+    width: 44px;
+    height: 44px;
+
+    font-size: 22px;
+
+    border-width: 2px;
+  }
+
+  .station-label {
+    font-size: 0.48rem;
+  }
+
+  .drag-hint {
+    font-size: 0.6rem;
+  }
+
+
+  /* RESULT */
+
+  .cake-result {
+    padding: 18px;
+
+    border-radius: 14px;
+
+    box-shadow:
+      4px 4px 0 #e99ab4;
+  }
+
+  .big-cake-score {
+    font-size: 2.6rem;
+  }
+
+  .result-middle p {
+    font-size: 0.85rem;
+  }
+
+  .result-stats {
+    flex-direction: column;
+
+    gap: 7px;
+  }
+
+  .result-stats span {
+    justify-content: center;
+  }
+
+  .next-cake-button {
+    padding: 11px;
+
+    font-size: 0.75rem;
+  }
+
+
+  /* DRAG PREVIEW */
+
+  .dragging-decoration {
+    font-size: 30px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  .cake-disaster {
+    padding:
+      14px
+      9px
+      30px;
+  }
+
+  .cake-title-icon {
+    display: none;
+  }
+
+  .cake-disaster-header h1 {
+    font-size: 1.55rem;
+  }
+
+  .back-button {
+    font-size: 0.62rem;
+  }
+
+  .target-cake,
+  .cake {
+    transform:
+      scale(
+        0.78
+      );
+
+    margin-bottom:
+      -25px;
+  }
+
+  .decoration-tray button {
+    width: 40px;
+    height: 40px;
+
+    font-size: 20px;
+  }
 }

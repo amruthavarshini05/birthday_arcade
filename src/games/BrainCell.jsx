@@ -1,62 +1,74 @@
-import {
-  useEffect,
-  useState,
-} from 'react'
-
+import { useEffect, useRef, useState } from 'react'
 import './BrainCell.css'
 
 const FALLING_OBJECTS = [
-  {
-    type: '🧠',
-    points: 10,
-  },
-  {
-    type: '☕',
-    points: 15,
-  },
-  {
-    type: '📱',
-    points: -5,
-  },
-  {
-    type: '🧟‍♀️',
-    points: -10,
-  },
-  {
-    type: '📖',
-    points: -15,
-  },
+  { type: '🧠', points: 10 },
+  { type: '☕', points: 15 },
+  { type: '📱', points: -5 },
+  { type: '🧟‍♀️', points: -10 },
+  { type: '📖', points: -15 },
 ]
 
+const GAME_DURATION = 60
+
 function BrainCell({ onBack }) {
-  const [gameStarted, setGameStarted] =
-    useState(false)
+  const [gameStarted, setGameStarted] = useState(false)
+  const [gameOver, setGameOver] = useState(false)
 
-  const [playerX, setPlayerX] =
-    useState(50)
+  const [playerX, setPlayerX] = useState(50)
+  const [fallingObjects, setFallingObjects] = useState([])
 
-  const [fallingObjects, setFallingObjects] =
-    useState([])
+  const [score, setScore] = useState(0)
+  const [timeLeft, setTimeLeft] =
+    useState(GAME_DURATION)
 
-  const [score, setScore] =
-    useState(0)
+  const [highScore, setHighScore] = useState(() => {
+    const savedScore =
+      localStorage.getItem(
+        'brainCellHighScore'
+      )
 
-  const [highScore, setHighScore] =
-    useState(() => {
-      const savedScore =
-        localStorage.getItem(
-          'brainCellHighScore'
-        )
+    return savedScore
+      ? Number(savedScore)
+      : 0
+  })
 
-      return savedScore
-        ? Number(savedScore)
-        : 0
-    })
+  const playerXRef = useRef(50)
+  const scoreRef = useRef(0)
+  const highScoreRef =
+    useRef(highScore)
+
+  const objectsRef = useRef([])
+
+  const lastTimeRef =
+    useRef(null)
+
+  const elapsedRef =
+    useRef(0)
+
+  const spawnAccumulatorRef =
+    useRef(0)
+
+  const playAreaRef =
+    useRef(null)
+
+  const draggingRef =
+    useRef(false)
 
   /*
-   * =====================================================
+   * KEEP REFS IN SYNC
+   */
+
+  useEffect(() => {
+    playerXRef.current = playerX
+  }, [playerX])
+
+  useEffect(() => {
+    highScoreRef.current = highScore
+  }, [highScore])
+
+  /*
    * KEYBOARD CONTROLS
-   * =====================================================
    */
 
   useEffect(() => {
@@ -67,26 +79,32 @@ function BrainCell({ onBack }) {
         event.key === 'ArrowLeft' ||
         event.key.toLowerCase() === 'a'
       ) {
-        setPlayerX(
-          (current) =>
-            Math.max(
-              8,
-              current - 5
-            )
-        )
+        setPlayerX((current) => {
+          const next = Math.max(
+            7,
+            current - 4
+          )
+
+          playerXRef.current = next
+
+          return next
+        })
       }
 
       if (
         event.key === 'ArrowRight' ||
         event.key.toLowerCase() === 'd'
       ) {
-        setPlayerX(
-          (current) =>
-            Math.min(
-              92,
-              current + 5
-            )
-        )
+        setPlayerX((current) => {
+          const next = Math.min(
+            93,
+            current + 4
+          )
+
+          playerXRef.current = next
+
+          return next
+        })
       }
     }
 
@@ -104,16 +122,182 @@ function BrainCell({ onBack }) {
   }, [gameStarted])
 
   /*
-   * =====================================================
-   * SPAWN OBJECTS
-   * =====================================================
+   * TOUCH / MOUSE DRAGGING
+   *
+   * Drag anywhere inside the play area
+   * to move the character horizontally.
+   */
+
+  function updatePlayerFromPointer(
+    clientX
+  ) {
+    const playArea =
+      playAreaRef.current
+
+    if (!playArea) return
+
+    const rect =
+      playArea.getBoundingClientRect()
+
+    const relativeX =
+      clientX - rect.left
+
+    const percentage =
+      (relativeX / rect.width) * 100
+
+    const next = Math.max(
+      7,
+      Math.min(93, percentage)
+    )
+
+    playerXRef.current = next
+    setPlayerX(next)
+  }
+
+  function handlePointerDown(event) {
+    if (!gameStarted) return
+
+    draggingRef.current = true
+
+    event.currentTarget.setPointerCapture?.(
+      event.pointerId
+    )
+
+    updatePlayerFromPointer(
+      event.clientX
+    )
+  }
+
+  function handlePointerMove(event) {
+    if (
+      !gameStarted ||
+      !draggingRef.current
+    ) {
+      return
+    }
+
+    updatePlayerFromPointer(
+      event.clientX
+    )
+  }
+
+  function handlePointerUp(event) {
+    draggingRef.current = false
+
+    try {
+      event.currentTarget.releasePointerCapture?.(
+        event.pointerId
+      )
+    } catch {
+      // Nothing to do.
+    }
+  }
+
+  /*
+   * MAIN GAME LOOP
    */
 
   useEffect(() => {
     if (!gameStarted) return
 
-    const spawnTimer =
-      setInterval(() => {
+    lastTimeRef.current =
+      performance.now()
+
+    elapsedRef.current = 0
+    spawnAccumulatorRef.current = 0
+
+    let animationFrame
+
+    const gameLoop = (
+      currentTime
+    ) => {
+      if (!lastTimeRef.current) {
+        lastTimeRef.current =
+          currentTime
+      }
+
+      const delta =
+        currentTime -
+        lastTimeRef.current
+
+      lastTimeRef.current =
+        currentTime
+
+      elapsedRef.current += delta
+
+      const elapsedSeconds =
+        elapsedRef.current / 1000
+
+      /*
+       * TIMER
+       */
+
+      const remainingTime =
+        Math.max(
+          0,
+          Math.ceil(
+            GAME_DURATION -
+              elapsedSeconds
+          )
+        )
+
+      setTimeLeft(
+        remainingTime
+      )
+
+      /*
+       * END GAME
+       */
+
+      if (
+        elapsedSeconds >=
+        GAME_DURATION
+      ) {
+        setGameStarted(false)
+        setGameOver(true)
+
+        setFallingObjects([])
+
+        objectsRef.current = []
+
+        return
+      }
+
+      /*
+       * DIFFICULTY
+       */
+
+      let spawnRate = 1000
+      let fallSpeed = 1.8
+
+      if (elapsedSeconds >= 15) {
+        spawnRate = 850
+        fallSpeed = 2.1
+      }
+
+      if (elapsedSeconds >= 30) {
+        spawnRate = 700
+        fallSpeed = 2.5
+      }
+
+      if (elapsedSeconds >= 45) {
+        spawnRate = 550
+        fallSpeed = 3
+      }
+
+      /*
+       * SPAWN
+       */
+
+      spawnAccumulatorRef.current +=
+        delta
+
+      if (
+        spawnAccumulatorRef.current >=
+        spawnRate
+      ) {
+        spawnAccumulatorRef.current = 0
+
         const object =
           FALLING_OBJECTS[
             Math.floor(
@@ -122,252 +306,152 @@ function BrainCell({ onBack }) {
             )
           ]
 
-        setFallingObjects(
-          (current) => [
-            ...current,
-            {
-              id:
-                Date.now() +
-                Math.random(),
+        objectsRef.current.push({
+          id:
+            Date.now() +
+            Math.random(),
 
-              type:
-                object.type,
+          type: object.type,
 
-              points:
-                object.points,
+          points: object.points,
 
-              x:
-                Math.random() *
-                  84 +
-                8,
+          x:
+            Math.random() * 84 + 8,
 
-              y: -5,
-            },
-          ]
-        )
-      }, 1000)
+          y: -6,
+        })
+      }
 
-    return () =>
-      clearInterval(
-        spawnTimer
+      /*
+       * MOVE + CATCH
+       */
+
+      const nextObjects = []
+
+      objectsRef.current.forEach(
+        (object) => {
+          const nextY =
+            object.y +
+            fallSpeed *
+              (delta / 50)
+
+          /*
+           * CATCH ZONE
+           */
+
+          if (
+            nextY >= 86 &&
+            nextY <= 96
+          ) {
+            const horizontalDistance =
+              Math.abs(
+                object.x -
+                  playerXRef.current
+              )
+
+            if (
+              horizontalDistance <= 9
+            ) {
+              scoreRef.current +=
+                object.points
+
+              setScore(
+                scoreRef.current
+              )
+
+              /*
+               * HIGH SCORE
+               */
+
+              if (
+                scoreRef.current >
+                highScoreRef.current
+              ) {
+                highScoreRef.current =
+                  scoreRef.current
+
+                setHighScore(
+                  scoreRef.current
+                )
+
+                localStorage.setItem(
+                  'brainCellHighScore',
+                  scoreRef.current.toString()
+                )
+              }
+
+              return
+            }
+          }
+
+          /*
+           * KEEP OBJECT
+           */
+
+          if (nextY < 106) {
+            nextObjects.push({
+              ...object,
+              y: nextY,
+            })
+          }
+        }
       )
+
+      objectsRef.current =
+        nextObjects
+
+      setFallingObjects(
+        [...nextObjects]
+      )
+
+      animationFrame =
+        requestAnimationFrame(
+          gameLoop
+        )
+    }
+
+    animationFrame =
+      requestAnimationFrame(
+        gameLoop
+      )
+
+    return () => {
+      cancelAnimationFrame(
+        animationFrame
+      )
+    }
   }, [gameStarted])
 
   /*
-   * =====================================================
-   * MOVE + CATCH OBJECTS
-   * =====================================================
-   */
-
-  useEffect(() => {
-    if (!gameStarted) return
-
-    const fallTimer =
-      setInterval(() => {
-        setFallingObjects(
-          (current) => {
-            const nextObjects = []
-
-            current.forEach(
-              (object) => {
-                const nextY =
-                  object.y + 2
-
-                /*
-                 * CATCH ZONE
-                 */
-
-                if (
-                  nextY >= 88 &&
-                  nextY <= 96
-                ) {
-                  const horizontalDistance =
-                    Math.abs(
-                      object.x -
-                        playerX
-                    )
-
-                  if (
-                    horizontalDistance <=
-                    8
-                  ) {
-                    setScore(
-                      (currentScore) => {
-                        const newScore =
-                          currentScore +
-                          object.points
-
-                        if (
-                          newScore >
-                          highScore
-                        ) {
-                          setHighScore(
-                            newScore
-                          )
-
-                          localStorage.setItem(
-                            'brainCellHighScore',
-                            newScore.toString()
-                          )
-                        }
-
-                        return newScore
-                      }
-                    )
-
-                    return
-                  }
-                }
-
-                /*
-                 * KEEP FALLING
-                 */
-
-                if (
-                  nextY < 105
-                ) {
-                  nextObjects.push({
-                    ...object,
-                    y: nextY,
-                  })
-                }
-              }
-            )
-
-            return nextObjects
-          }
-        )
-      }, 50)
-
-    return () =>
-      clearInterval(
-        fallTimer
-      )
-  }, [
-    gameStarted,
-    playerX,
-    highScore,
-  ])
-
-  /*
-   * =====================================================
-   * TOUCH / MOUSE DRAGGING
-   * =====================================================
-   *
-   * The entire game area is draggable.
-   *
-   * On mobile:
-   * Put your finger anywhere in the game,
-   * drag left/right, and the face follows.
-   */
-
-  function updatePlayerFromPointer(
-    event
-  ) {
-    if (!gameStarted) return
-
-    const area =
-      event.currentTarget.getBoundingClientRect()
-
-    const percentage =
-      ((event.clientX -
-        area.left) /
-        area.width) *
-      100
-
-    setPlayerX(
-      Math.max(
-        8,
-        Math.min(
-          92,
-          percentage
-        )
-      )
-    )
-  }
-
-  function handlePointerDown(
-    event
-  ) {
-    if (!gameStarted) return
-
-    event.preventDefault()
-
-    event.currentTarget.setPointerCapture(
-      event.pointerId
-    )
-
-    updatePlayerFromPointer(
-      event
-    )
-  }
-
-  function handlePointerMove(
-    event
-  ) {
-    if (!gameStarted) return
-
-    /*
-     * Only move while the user is
-     * actively holding a pointer.
-     */
-
-    if (
-      event.buttons === 0 &&
-      event.pointerType !==
-        'touch'
-    ) {
-      return
-    }
-
-    event.preventDefault()
-
-    updatePlayerFromPointer(
-      event
-    )
-  }
-
-  /*
-   * =====================================================
-   * ARROW BUTTON CONTROLS
-   * =====================================================
-   */
-
-  function movePlayer(
-    direction
-  ) {
-    setPlayerX(
-      (current) => {
-        if (
-          direction ===
-          'left'
-        ) {
-          return Math.max(
-            8,
-            current - 5
-          )
-        }
-
-        return Math.min(
-          92,
-          current + 5
-        )
-      }
-    )
-  }
-
-  /*
-   * =====================================================
-   * START
-   * =====================================================
+   * START GAME
    */
 
   function startGame() {
+    playerXRef.current = 50
+
     setPlayerX(50)
+
+    scoreRef.current = 0
+
+    setScore(0)
+
+    objectsRef.current = []
 
     setFallingObjects([])
 
-    setScore(0)
+    elapsedRef.current = 0
+
+    spawnAccumulatorRef.current = 0
+
+    lastTimeRef.current = null
+
+    draggingRef.current = false
+
+    setTimeLeft(
+      GAME_DURATION
+    )
+
+    setGameOver(false)
 
     setGameStarted(true)
   }
@@ -375,25 +459,22 @@ function BrainCell({ onBack }) {
   return (
     <main className="brain-cell">
 
-      {/* =================================================
-          BACKGROUND DECOR
-      ================================================= */}
+      {/* BACKGROUND DECOR */}
 
-      <div className="brain-confetti brain-confetti-one">
+      <div className="brain-bg-orb brain-bg-orb-one">
+        🧠
+      </div>
+
+      <div className="brain-bg-orb brain-bg-orb-two">
         ✦
       </div>
 
-      <div className="brain-confetti brain-confetti-two">
-        ⚡
+      <div className="brain-bg-orb brain-bg-orb-three">
+        ☕
       </div>
 
-      <div className="brain-confetti brain-confetti-three">
-        • • •
-      </div>
 
-      {/* =================================================
-          HEADER
-      ================================================= */}
+      {/* HEADER */}
 
       <header className="brain-cell-header">
 
@@ -411,9 +492,8 @@ function BrainCell({ onBack }) {
           </span>
 
           <div>
-
             <p className="brain-eyebrow">
-              MENTAL CAPACITY: QUESTIONABLE
+              COGNITIVE DEPARTMENT
             </p>
 
             <h1>
@@ -423,39 +503,38 @@ function BrainCell({ onBack }) {
             <p>
               Catch what little remains.
             </p>
-
           </div>
 
         </div>
 
       </header>
 
-      {/* =================================================
-          START SCREEN
-      ================================================= */}
 
-      {!gameStarted ? (
+      {/* START SCREEN */}
+
+      {!gameStarted &&
+      !gameOver ? (
 
         <section className="brain-start">
 
           <div className="brain-start-art">
 
-            <span className="brain-main">
+            <span className="brain-start-main">
               🧠
             </span>
 
-            <span className="brain-spark brain-spark-one">
-              ⚡
+            <span className="brain-floating-coffee">
+              ☕
             </span>
 
-            <span className="brain-spark brain-spark-two">
+            <span className="brain-floating-star">
               ✦
             </span>
 
           </div>
 
           <p className="brain-section-label">
-            BRAIN STATUS: BARELY FUNCTIONAL
+            COGNITIVE EMERGENCY
           </p>
 
           <h2>
@@ -464,139 +543,140 @@ function BrainCell({ onBack }) {
 
           <p className="brain-start-copy">
             Catch the good stuff.
+            <br />
             Avoid the questionable stuff.
-            Try to keep at least one
-            brain cell operational.
           </p>
 
-          {/* =================================================
-              POINTS
-          ================================================= */}
+
+          {/* POINTS */}
 
           <div className="brain-points">
 
-            <div className="brain-points-heading">
+            <div className="brain-points-header">
               <span>
-                POINTS SYSTEM
+                WHAT TO CATCH
               </span>
 
-              <span>
-                CATCH IT
-              </span>
+              <strong>
+                POINTS
+              </strong>
             </div>
 
-            <div className="brain-point-row">
-
+            <div className="brain-point-row positive">
               <span>
                 🧠 Brain
               </span>
 
-              <strong className="positive">
+              <strong>
                 +10
               </strong>
-
             </div>
 
-            <div className="brain-point-row">
-
+            <div className="brain-point-row positive">
               <span>
                 ☕ Coffee
               </span>
 
-              <strong className="positive">
+              <strong>
                 +15
               </strong>
-
             </div>
 
-            <div className="brain-point-row">
-
+            <div className="brain-point-row negative">
               <span>
                 📱 Phone
               </span>
 
-              <strong className="negative">
+              <strong>
                 -5
               </strong>
-
             </div>
 
-            <div className="brain-point-row">
-
+            <div className="brain-point-row negative">
               <span>
                 🧟‍♀️ Dead Brain Cell
               </span>
 
-              <strong className="negative">
+              <strong>
                 -10
               </strong>
-
             </div>
 
-            <div className="brain-point-row">
-
+            <div className="brain-point-row negative">
               <span>
                 📖 Book
               </span>
 
-              <strong className="negative">
+              <strong>
                 -15
               </strong>
-
             </div>
 
           </div>
 
-          {/* =================================================
-              CONTROLS INFO
-          ================================================= */}
 
-          <div className="brain-controls-hint">
+          <div className="brain-how-to-play">
 
             <span>
-              🖱️ DRAG
+              🖱️
             </span>
 
-            <span>
-              ⌨️ ← →
-            </span>
+            <p>
+              Desktop: use
+              <b> ← → </b>
+              or
+              <b> A / D</b>
+              <br />
 
-            <span>
-              📱 TOUCH
-            </span>
+              📱 Phone: drag the
+              <b> 👧 </b>
+              across the screen
+            </p>
 
           </div>
+
 
           <button
             className="brain-start-button"
             onClick={startGame}
           >
             SAVE THE BRAIN
-            <span>
-              🧠
-            </span>
+            <span>🧠</span>
           </button>
 
         </section>
 
-      ) : (
+      ) : gameOver ? (
 
-        /* =================================================
-           GAME
-        ================================================= */
+        /* GAME OVER */
 
-        <section className="brain-game">
+        <section className="brain-game-over">
 
-          {/* =================================================
-              SCORE BOARD
-          ================================================= */}
+          <div className="game-over-icon">
+            🧠💀
+          </div>
 
-          <div className="brain-score-board">
+          <p className="brain-section-label">
+            SYSTEM FAILURE
+          </p>
 
-            <div className="brain-score-card">
+          <h2>
+            BRAIN CELL DEPLETED!
+          </h2>
+
+          <p className="game-over-copy">
+            Time's up.
+            <br />
+            How much brainpower survived?
+          </p>
+
+
+          <div className="brain-final-stats">
+
+            <div className="final-stat main-stat">
 
               <span>
-                🧠 SCORE
+                FINAL SCORE
               </span>
 
               <strong>
@@ -605,7 +685,8 @@ function BrainCell({ onBack }) {
 
             </div>
 
-            <div className="brain-score-card high-score">
+
+            <div className="final-stat">
 
               <span>
                 🏆 HIGH SCORE
@@ -619,21 +700,112 @@ function BrainCell({ onBack }) {
 
           </div>
 
-          {/* =================================================
-              PLAY AREA
-          ================================================= */}
+
+          {score >= highScore &&
+          score > 0 && (
+            <h3 className="new-high-score">
+              🎉 NEW HIGH SCORE! 🎉
+            </h3>
+          )}
+
+
+          <button
+            className="brain-restart-button"
+            onClick={startGame}
+          >
+            PLAY AGAIN
+            <span>🧠</span>
+          </button>
+
+        </section>
+
+      ) : (
+
+        /* GAME */
+
+        <section className="brain-game">
+
+          {/* SCOREBOARD */}
+
+          <div className="brain-score-board">
+
+            <div className="brain-stat">
+
+              <span>
+                SCORE
+              </span>
+
+              <strong>
+                {score}
+              </strong>
+
+            </div>
+
+
+            <div className="brain-stat">
+
+              <span>
+                HIGH SCORE
+              </span>
+
+              <strong>
+                {highScore}
+              </strong>
+
+            </div>
+
+
+            <div
+              className={`brain-stat brain-timer ${
+                timeLeft <= 10
+                  ? 'timer-danger'
+                  : ''
+              }`}
+            >
+
+              <span>
+                TIME
+              </span>
+
+              <strong>
+                {timeLeft}s
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          {/* PLAY AREA */}
 
           <div
+            ref={playAreaRef}
             className="brain-play-area"
+
             onPointerDown={
               handlePointerDown
             }
+
             onPointerMove={
               handlePointerMove
             }
+
+            onPointerUp={
+              handlePointerUp
+            }
+
+            onPointerCancel={
+              handlePointerUp
+            }
+
           >
 
-            {/* Falling objects */}
+            <div className="brain-play-label">
+              DRAG TO MOVE
+            </div>
+
+
+            {/* FALLING OBJECTS */}
 
             {fallingObjects.map(
               (object) => (
@@ -644,6 +816,7 @@ function BrainCell({ onBack }) {
                       ? 'good-object'
                       : 'bad-object'
                   }`}
+
                   style={{
                     left: `${object.x}%`,
                     top: `${object.y}%`,
@@ -654,10 +827,12 @@ function BrainCell({ onBack }) {
               )
             )}
 
-            {/* Player */}
+
+            {/* PLAYER */}
 
             <div
               className="brain-player"
+
               style={{
                 left: `${playerX}%`,
               }}
@@ -665,56 +840,18 @@ function BrainCell({ onBack }) {
               👧
             </div>
 
-            {/* Touch hint */}
 
-            <div className="brain-touch-hint">
-              DRAG TO MOVE
-            </div>
+            {/* CATCH LINE */}
 
-          </div>
-
-          {/* =================================================
-              DESKTOP CONTROLS
-          ================================================= */}
-
-          <div className="brain-controls">
-
-            <button
-              type="button"
-              onPointerDown={() =>
-                movePlayer(
-                  'left'
-                )
-              }
-            >
-              ◀
-            </button>
-
-            <span>
-              MOVE
-            </span>
-
-            <button
-              type="button"
-              onPointerDown={() =>
-                movePlayer(
-                  'right'
-                )
-              }
-            >
-              ▶
-            </button>
+            <div className="brain-catch-line" />
 
           </div>
 
-          {/* =================================================
-              MOBILE INSTRUCTION
-          ================================================= */}
 
-          <p className="brain-mobile-hint">
-            Touch and drag anywhere
-            to move the brain catcher.
-          </p>
+          <div className="brain-mobile-hint">
+            <span>☝️</span>
+            Drag anywhere to move
+          </div>
 
         </section>
 
