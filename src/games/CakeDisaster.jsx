@@ -179,16 +179,10 @@ function CakeDisaster({ onBack }) {
   
     event.preventDefault()
   
-    const cake = cakeRef.current
-  
-    if (!cake) return
-  
-    const rect = cake.getBoundingClientRect()
-  
     setDraggingDecoration({
       type,
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top,
+      x: event.clientX,
+      y: event.clientY,
     })
   }
 
@@ -209,8 +203,8 @@ function CakeDisaster({ onBack }) {
 
         return {
           ...current,
-          x: event.clientX - rect.left,
-          y: event.clientY - rect.top,
+          x: event.clientX,
+          y: event.clientY,
         }
       })
     }
